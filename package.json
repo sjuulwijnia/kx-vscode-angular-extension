@@ -1,0 +1,81 @@
+{
+	"name": "kx-vscode-angular-extension",
+	"displayName": "kx-vscode-angular-extension",
+	"description": "",
+	"version": "0.0.1",
+	"publisher": "sjuulwijnia",
+	"engines": {
+		"vscode": "^1.18.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"workspaceContains:**/.angular-cli.json"
+	],
+	"main": "./out/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "kx-vscode-angular-extension.createAngularComponent",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular component..."
+			},
+			{
+				"command": "kx-vscode-angular-extension.createAngularService",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular service..."
+			}
+		],
+		"configuration": [
+			{
+				"type": "object",
+				"title": "kx-vscode-angular-extension",
+				"properties": {
+					"kx-vscode-angular-extension.createBarrelFile": {
+						"type": "boolean",
+						"default": true,
+						"description": "Whether to use a barrel file (index.ts) or not for the files that are created in a containing folder (non-flat). Defaults to true."
+					},
+					"kx-vscode-angular-extension.openCreatedFile": {
+						"type": "boolean",
+						"default": true,
+						"description": "Whether to open the created file or not. Defaults to true."
+					}
+				}
+			}
+		],
+		"configurationDefaults": {
+			"kx-vscode-angular-extension.createBarrelFile": true,
+			"kx-vscode-angular-extension.openCreatedFile": true
+		},
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "kx-vscode-angular-extension.createAngularComponent",
+					"group": "kx-vscode-angular-extension"
+				},
+				{
+					"command": "kx-vscode-angular-extension.createAngularService",
+					"group": "kx-vscode-angular-extension"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
+	},
+	"dependencies": {
+		"editorconfig-parser": "0.0.2"
+	}
+}
