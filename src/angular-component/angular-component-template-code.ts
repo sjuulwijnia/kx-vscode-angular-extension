@@ -2,7 +2,7 @@
 import { AngularCliComponentConfiguration } from '../config-watchers';
 import { AngularSelector } from '../angular-selector';
 
-export function createComponentCode(angularComponentConfiguration: AngularCliComponentConfiguration, angularSelector: AngularSelector, styleExtension: string = 'css') {
+export function createComponentTemplateCode(angularComponentConfiguration: AngularCliComponentConfiguration, angularSelector: AngularSelector, styleExtension: string = 'css') {
 	const componentOptions: string[] = [
 		`selector: '${angularSelector.component}'`
 	];
@@ -41,17 +41,17 @@ export function createComponentCode(angularComponentConfiguration: AngularCliCom
 		default: break;
 	}
 
-	return componentCodeTemplate
-		.replace(COMPONENT_CLASS_REPLACE, angularSelector.clazz)
-		.replace(COMPONENT_IMPORTS_REPLACE, componentImports.join(', '))
-		.replace(COMPONENT_OPTIONS_REPLACE, componentOptions.join(',\n\t'));
+	return componentTemplateCode
+		.replace(new RegExp(COMPONENT_CLASS_REPLACE, 'gm'), angularSelector.clazz)
+		.replace(new RegExp(COMPONENT_IMPORTS_REPLACE, 'gm'), componentImports.join(', '))
+		.replace(new RegExp(COMPONENT_OPTIONS_REPLACE, 'gm'), componentOptions.join(',\n\t'));
 }
 
-const COMPONENT_CLASS_REPLACE = '$$COMPONENT_CLASS_REPLACE';
-const COMPONENT_IMPORTS_REPLACE = '$$COMPONENT_IMPORTS_REPLACE';
-const COMPONENT_OPTIONS_REPLACE = '$$COMPONENT_OPTIONS_REPLACE';
+const COMPONENT_CLASS_REPLACE = 'SERVICE_CLASS_REPLACE';
+const COMPONENT_IMPORTS_REPLACE = '##COMPONENT_IMPORTS_REPLACE';
+const COMPONENT_OPTIONS_REPLACE = '##COMPONENT_OPTIONS_REPLACE';
 
-const componentCodeTemplate = `import { ${COMPONENT_IMPORTS_REPLACE} } from '@angular/core';
+const componentTemplateCode = `import { ${COMPONENT_IMPORTS_REPLACE} } from '@angular/core';
 
 @Component({
 	${COMPONENT_OPTIONS_REPLACE}

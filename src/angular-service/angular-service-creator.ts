@@ -16,7 +16,8 @@ import {
 	editorConfigurationWatcher,
 } from '../config-watchers';
 
-import { createServiceCode } from './angular-service-templates';
+import { createServiceTemplateCode } from './angular-service-template-code';
+import { createServiceTemplateSpec } from './angular-service-template-spec';
 
 export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfiguration> {
 	constructor(context: vscode.ExtensionContext) {
@@ -92,7 +93,7 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 		const filename = `${directory}${path.sep}${selector.filename}`;
 
 		// create typescript file
-		const typescript = editorConfiguration.makeCompliant(createServiceCode(configuration, selector));
+		const typescript = editorConfiguration.makeCompliant(createServiceTemplateCode(configuration, selector));
 		await fileUtil.createFile(`${filename}.ts`, typescript);
 
 		// create barrel file if configured
@@ -103,8 +104,8 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 
 		// TODO: create spec file if configured
 		if (configuration.spec) {
-			const index = editorConfiguration.makeCompliant(`// TODO: create spec file yay!`);
-			await fileUtil.createFile(`${filename}.spec.ts`, index);
+			const spec = editorConfiguration.makeCompliant(createServiceTemplateSpec(selector));
+			await fileUtil.createFile(`${filename}.spec.ts`, spec);
 		}
 
 		// open .component if configured

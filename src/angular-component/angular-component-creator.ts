@@ -20,7 +20,8 @@ import {
 	editorConfigurationWatcher
 } from '../config-watchers';
 
-import { createComponentCode } from './angular-component-templates';
+import { createComponentTemplateCode } from './angular-component-template-code';
+import { createComponentTemplateSpec } from './angular-component-template-spec';
 
 export class AngularComponentCreator extends AngularCreator<AngularCliComponentConfiguration> {
 	constructor(context: vscode.ExtensionContext) {
@@ -196,7 +197,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 		const filename = `${directory}${path.sep}${selector.filename}`;
 
 		// create typescript file
-		const typescript = editorConfiguration.makeCompliant(createComponentCode(configuration, selector, this.angularConfiguration.defaults.styleExt));
+		const typescript = editorConfiguration.makeCompliant(createComponentTemplateCode(configuration, selector, this.angularConfiguration.defaults.styleExt));
 		await fileUtil.createFile(`${filename}.ts`, typescript);
 
 		// create style file if configured
@@ -219,8 +220,8 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 
 		// TODO: create spec file if configured
 		if (configuration.spec) {
-			const index = editorConfiguration.makeCompliant(`// TODO: create spec file yay!`);
-			await fileUtil.createFile(`${filename}.spec.ts`, index);
+			const spec = editorConfiguration.makeCompliant(createComponentTemplateSpec(selector));
+			await fileUtil.createFile(`${filename}.spec.ts`, spec);
 		}
 
 		// open .component if configured

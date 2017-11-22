@@ -27,8 +27,11 @@ During creation, you can choose to use the current configuration or to manually 
 ## Known Issues
 
 * Unlinke **ng generate ...**, it doesn't look for the closest _NgModule_ and add the created option to it.
-* The *.spec.ts file is... rather empty. It shouldn't be.
 
 ## Release Notes
 
 None so far!
+
+## Up next
+
+Directives and pipes!
