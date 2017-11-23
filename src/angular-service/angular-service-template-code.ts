@@ -8,16 +8,16 @@ export function createServiceTemplateCode(angularServiceConfiguration: AngularCl
 	];
 
 	return serviceTemplateCode
-		.replace(new RegExp(SERVICE_CLASS_REPLACE, 'gm'), angularSelector.clazz)
-		.replace(new RegExp(SERVICE_IMPORTS_REPLACE, 'gm'), serviceImports.join(', '));
+		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
+		.replace(new RegExp(IMPORST_REPLACE, 'gm'), serviceImports.join(', '));
 }
 
-const SERVICE_CLASS_REPLACE = '##SERVICE_CLASS_REPLACE';
-const SERVICE_IMPORTS_REPLACE = '##SERVICE_IMPORTS_REPLACE';
+const CLASS_REPLACE = '##CLASS_REPLACE';
+const IMPORST_REPLACE = '##IMPORST_REPLACE';
 
-const serviceTemplateCode = `import { ${SERVICE_IMPORTS_REPLACE} } from '@angular/core';
+const serviceTemplateCode = `import { ${IMPORST_REPLACE} } from '@angular/core';
 
 @Injectable()
-export class ${SERVICE_CLASS_REPLACE} {
+export class ${CLASS_REPLACE} {
 
 }`

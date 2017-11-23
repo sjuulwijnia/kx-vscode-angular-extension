@@ -8,21 +8,21 @@ export function createDirectiveTemplateCode(angularServiceConfiguration: Angular
 	];
 
 	return directiveTemplateCode
-		.replace(new RegExp(DIRECTIVE_CLASS_REPLACE, 'gm'), angularSelector.clazz)
-		.replace(new RegExp(DIRECTIVE_NAME_REPLACE, 'gm'), angularSelector.directive)
-		.replace(new RegExp(DIRECTIVE_IMPORTS_REPLACE, 'gm'), directiveImports.join(', '));
+		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
+		.replace(new RegExp(NAME_REPLACE, 'gm'), angularSelector.directive)
+		.replace(new RegExp(IMPORTS_REPLACE, 'gm'), directiveImports.join(', '));
 }
 
-const DIRECTIVE_CLASS_REPLACE = '##DIRECTIVE_CLASS_REPLACE';
-const DIRECTIVE_IMPORTS_REPLACE = '##DIRECTIVE_IMPORTS_REPLACE';
-const DIRECTIVE_NAME_REPLACE = '##DIRECTIVE_NAME_REPLACE';
+const CLASS_REPLACE = '##CLASS_REPLACE';
+const IMPORTS_REPLACE = '##IMPORTS_REPLACE';
+const NAME_REPLACE = '##NAME_REPLACE';
 
-const directiveTemplateCode = `import { ${DIRECTIVE_IMPORTS_REPLACE} } from '@angular/core';
+const directiveTemplateCode = `import { ${IMPORTS_REPLACE} } from '@angular/core';
 
 @Directive({
-  selector: '[${DIRECTIVE_NAME_REPLACE}]'
+  selector: '[${NAME_REPLACE}]'
 })
-export class ${DIRECTIVE_CLASS_REPLACE} {
+export class ${CLASS_REPLACE} {
 
   constructor() { }
 

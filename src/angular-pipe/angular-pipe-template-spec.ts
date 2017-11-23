@@ -4,18 +4,18 @@ import { AngularSelector } from '../angular-selector';
 
 export function createPipeTemplateSpec(angularPipeConfiguration: AngularCliPipeConfiguration, angularSelector: AngularSelector) {
 	return pipeTemplateSpec
-		.replace(new RegExp(PIPE_CLASS_REPLACE, 'gm'), angularSelector.clazz)
-		.replace(new RegExp(PIPE_FILE_REPLACE, 'gm'), angularSelector.filename);
+		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
+		.replace(new RegExp(FILE_REPLACE, 'gm'), angularSelector.filename);
 }
 
-const PIPE_CLASS_REPLACE = '##PIPE_CLASS_REPLACE';
-const PIPE_FILE_REPLACE = '##PIPE_FILE_REPLACE';
+const CLASS_REPLACE = '##CLASS_REPLACE';
+const FILE_REPLACE = '##FILE_REPLACE';
 
-const pipeTemplateSpec = `import { ${PIPE_CLASS_REPLACE} } from './${PIPE_FILE_REPLACE}';
+const pipeTemplateSpec = `import { ${CLASS_REPLACE} } from './${FILE_REPLACE}';
 
-describe('${PIPE_CLASS_REPLACE}', () => {
-  it('create an instance', () => {
-    const pipe = new ${PIPE_CLASS_REPLACE}();
+describe('${CLASS_REPLACE}', () => {
+  it('should create an instance', () => {
+    const pipe = new ${CLASS_REPLACE}();
     expect(pipe).toBeTruthy();
   });
 });`

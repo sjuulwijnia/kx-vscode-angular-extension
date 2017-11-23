@@ -42,20 +42,20 @@ export function createComponentTemplateCode(angularComponentConfiguration: Angul
 	}
 
 	return componentTemplateCode
-		.replace(new RegExp(COMPONENT_CLASS_REPLACE, 'gm'), angularSelector.clazz)
-		.replace(new RegExp(COMPONENT_IMPORTS_REPLACE, 'gm'), componentImports.join(', '))
-		.replace(new RegExp(COMPONENT_OPTIONS_REPLACE, 'gm'), componentOptions.join(',\n\t'));
+		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
+		.replace(new RegExp(IMPORTS_REPLACE, 'gm'), componentImports.join(', '))
+		.replace(new RegExp(OPTIONS_REPLACE, 'gm'), componentOptions.join(',\n\t'));
 }
 
-const COMPONENT_CLASS_REPLACE = 'SERVICE_CLASS_REPLACE';
-const COMPONENT_IMPORTS_REPLACE = '##COMPONENT_IMPORTS_REPLACE';
-const COMPONENT_OPTIONS_REPLACE = '##COMPONENT_OPTIONS_REPLACE';
+const CLASS_REPLACE = '##CLASS_REPLACE';
+const IMPORTS_REPLACE = '##IMPORTS_REPLACE';
+const OPTIONS_REPLACE = '##OPTIONS_REPLACE';
 
-const componentTemplateCode = `import { ${COMPONENT_IMPORTS_REPLACE} } from '@angular/core';
+const componentTemplateCode = `import { ${IMPORTS_REPLACE} } from '@angular/core';
 
 @Component({
-	${COMPONENT_OPTIONS_REPLACE}
+	${OPTIONS_REPLACE}
 })
-export class ${COMPONENT_CLASS_REPLACE} {
+export class ${CLASS_REPLACE} {
 
 }`

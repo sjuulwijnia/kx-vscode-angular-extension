@@ -35,4 +35,7 @@ None so far!
 
 ## Up next
 
-Resolving the nearest _NgModule_ and it if configured!
+* Resolving the nearest _NgModule_ and add the created option to it if configured!
+
+* Generalize replacing CLASS_REPLACE etc. in the templates.
+* Add some unit tests to guarantee functionality won't break.
