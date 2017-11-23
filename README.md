@@ -6,6 +6,7 @@ A Visual Studio Code extension that adds several context-menu options in the sid
 
 Added context-menu options:
 * _New Angular Component_: adds a new Angular component to the selected folder using the specified selector.
+* _New Angular Directive_: adds a new Angular directive to the selected folder using the specified selector.
 * _New Angular Pipe_: adds a new Angular pipe to the selected folder using the specified name.
 * _New Angular Service_: adds a new Angular service to the selected folder using the specified name.
 
