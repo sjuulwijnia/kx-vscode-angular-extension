@@ -22,6 +22,11 @@
 				"title": "New Angular component..."
 			},
 			{
+				"command": "kx-vscode-angular-extension.createAngularPipe",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular pipe..."
+			},
+			{
 				"command": "kx-vscode-angular-extension.createAngularService",
 				"category": "kx-vscode-angular-extension",
 				"title": "New Angular service..."
@@ -53,6 +58,10 @@
 			"explorer/context": [
 				{
 					"command": "kx-vscode-angular-extension.createAngularComponent",
+					"group": "kx-vscode-angular-extension"
+				},
+				{
+					"command": "kx-vscode-angular-extension.createAngularPipe",
 					"group": "kx-vscode-angular-extension"
 				},
 				{

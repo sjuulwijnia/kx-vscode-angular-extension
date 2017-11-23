@@ -1,52 +1,16 @@
 'use strict';
 
 export class AngularSelector {
-	public readonly clazz: string;
-	public readonly component: string;
-	public readonly directive: string;
-	public readonly filename: string;
-
-	constructor(
-		private readonly input: string,
-		private readonly prefix: string = '',
-		private readonly suffix: string = ''
-	) {
-		this.clazz = this.convertToClass();
-		this.component = this.convertToComponentSelector();
-		this.directive = this.convertToDirectiveSelector();
-		this.filename = this.convertToFilename();
-	}
-
-	private capitalize(input: string): string {
-		if (!input) {
+	public get clazz(): string {
+		const clazz = this.pipe;
+		if (!clazz) {
 			return '';
 		}
 
-		return input.charAt(0).toUpperCase() + input.slice(1);
+		return `${this.capitalize(clazz)}${this.capitalize(this.suffix)}`;
 	}
 
-	private convertToClass(): string {
-		if (!this.input) {
-			return '';
-		}
-
-		let clazz = this.input
-			.split('-')
-			.map(s => this.capitalize(s))
-			.join('')
-			.split(' ')
-			.map(s => this.capitalize(s))
-			.join('');
-
-		const prefixIndex = clazz.indexOf(`${this.capitalize(this.prefix)}`);
-		if (prefixIndex === 0) {
-			clazz = clazz.substring(this.prefix.length);
-		}
-
-		return `${clazz}${this.capitalize(this.suffix)}`;
-	}
-
-	private convertToComponentSelector(): string {
+	public get component(): string {
 		if (!this.input) {
 			return '';
 		}
@@ -65,11 +29,54 @@ export class AngularSelector {
 		return `${this.prefix.toLowerCase()}-${selector}`;
 	}
 
-	private convertToDirectiveSelector(): string {
-		return `${this.prefix.toLowerCase()}${this.convertToClass()}`;
+	public get directive(): string {
+		return `${this.prefix.toLowerCase()}${this.capitalize(this.pipe)}`;
 	}
 
-	private convertToFilename(): string {
-		return `${this.convertToComponentSelector()}.${this.suffix.toLowerCase()}`.substring(this.prefix.length + 1);
+	public get filename(): string {
+		return `${this.component}.${this.suffix.toLowerCase()}`.substring(this.prefix.length + 1);
+	}
+
+	public get pipe(): string {
+		if (!this.input) {
+			return '';
+		}
+
+		let pipe = this.input
+			.split('-')
+			.map(s => this.capitalize(s))
+			.join('')
+			.split(' ')
+			.map(s => this.capitalize(s))
+			.join('');
+
+		const prefixIndex = pipe.indexOf(`${this.capitalize(this.prefix)}`);
+		if (prefixIndex === 0) {
+			pipe = pipe.substring(this.prefix.length);
+		}
+
+		return this.decapitalize(pipe);
+	}
+
+	constructor(
+		private readonly input: string,
+		private readonly prefix: string = '',
+		private readonly suffix: string = ''
+	) { }
+
+	private capitalize(input: string): string {
+		if (!input) {
+			return '';
+		}
+
+		return input.charAt(0).toUpperCase() + input.slice(1);
+	}
+
+	private decapitalize(input: string): string {
+		if (!input) {
+			return '';
+		}
+
+		return input.charAt(0).toLowerCase() + input.slice(1);
 	}
 }

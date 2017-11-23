@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 import { AngularComponentCreator } from './angular-component';
+import { AngularPipeCreator } from './angular-pipe';
 import { AngularServiceCreator } from './angular-service';
 
 import { angularConfigurationWatcher, editorConfigurationWatcher } from './config-watchers';
@@ -18,6 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 	editorConfigurationWatcher().initialize(context);
 
 	const angularComponentCreator = new AngularComponentCreator(context);
+	const angularPipeCreator = new AngularPipeCreator(context);
 	const angularServiceCreator = new AngularServiceCreator(context);
 
 	// const disposable = vscode.commands.registerCommand('kx-vscode-angular-extension.createAngularObject', promptForCreationType);
