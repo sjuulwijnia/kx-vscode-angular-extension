@@ -21,9 +21,14 @@ export class AngularSelector {
 			.replace(/ /, '-')
 			.toLowerCase();
 
-		const prefixIndex = selector.indexOf(`${this.prefix.toLowerCase()}-`);
+		let prefixIndex = selector.indexOf(`${this.prefix.toLowerCase()}-`);
 		if (prefixIndex === 0) {
 			selector = selector.substring(this.prefix.length + 1);
+		} else {
+			prefixIndex = selector.indexOf(`${this.prefix.toLowerCase()}`);
+			if (prefixIndex === 0) {
+				selector = selector.substring(this.prefix.length);
+			}
 		}
 
 		return `${this.prefix.toLowerCase()}-${selector}`;

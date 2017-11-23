@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 import { AngularComponentCreator } from './angular-component';
+import { AngularDirectiveCreator } from './angular-directive';
 import { AngularPipeCreator } from './angular-pipe';
 import { AngularServiceCreator } from './angular-service';
 
@@ -19,6 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 	editorConfigurationWatcher().initialize(context);
 
 	const angularComponentCreator = new AngularComponentCreator(context);
+	const angularDirectiveCreator = new AngularDirectiveCreator(context);
 	const angularPipeCreator = new AngularPipeCreator(context);
 	const angularServiceCreator = new AngularServiceCreator(context);
 

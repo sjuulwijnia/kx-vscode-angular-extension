@@ -90,7 +90,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	}
 
 	protected prompt(prompt: string, prefix = ''): Promise<string> {
-		const value = (!!prefix) ? `${prefix}-` : '';
+		const value = (!!prefix) ? prefix : '';
 		const valueSelection: [number, number] = [value.length, value.length];
 
 		return new Promise(resolve => {
@@ -139,8 +139,22 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	private async onCommandTriggered(uri: vscode.Uri) {
 		const directory = fileUtil.getDirectoryFromUri(uri);
 
+		let prefix = this.angularApp.prefix;
+		switch (this.angularCreatorConfiguration.selectorPromptAppendPrefix) {
+			case 'short':
+				break;
+
+			case true:
+				prefix += `-`;
+				break;
+
+			default:
+				prefix = '';
+				break;
+		}
+
 		// get component selector
-		const selectorFromPrompt = await this.prompt(this.angularCreatorConfiguration.selectorPrompt, (!!this.angularCreatorConfiguration.selectorPromptAppendPrefix ? this.angularApp.prefix : ''));
+		const selectorFromPrompt = await this.prompt(this.angularCreatorConfiguration.selectorPrompt, prefix);
 		if (!selectorFromPrompt) {
 			return;
 		}
@@ -180,7 +194,6 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 			return;
 		}
 
-		console.log(this.angularCreatorConfiguration.angularType, configuration);
 		await this.createFiles(configuration, directory, selector);
 	}
 
@@ -201,8 +214,10 @@ export interface AngularCreatorConfiguration {
 	command: string;
 
 	selectorPrompt: string;
-	selectorPromptAppendPrefix: boolean;
+	selectorPromptAppendPrefix: AngularCreatorConfigurationAppendPrefixType;
 }
+
+export type AngularCreatorConfigurationAppendPrefixType = true | false | 'short';
 
 export interface PromptListRequest<T> {
 	defaultValue: T;
