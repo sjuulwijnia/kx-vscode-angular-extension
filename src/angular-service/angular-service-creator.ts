@@ -5,23 +5,21 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../file-util';
 
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
 	AngularCliConfiguration,
 	AngularCliDefaultsConfiguration,
 	AngularCliServiceConfiguration,
-
-	editorConfigurationWatcher,
 } from '../config-watchers';
 
 import { createServiceTemplateCode } from './angular-service-template-code';
 import { createServiceTemplateSpec } from './angular-service-template-spec';
 
 export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfiguration> {
-	constructor(context: vscode.ExtensionContext) {
-		super(context, {
+	constructor(angularCreatorInjects: AngularCreatorInjects) {
+		super(angularCreatorInjects, {
 			angularType: 'service',
 			command: 'createAngularService',
 
@@ -89,7 +87,7 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 			await fileUtil.createDirectory(directory);
 		}
 
-		const editorConfiguration = editorConfigurationWatcher();
+		const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 		const filename = `${directory}${path.sep}${selector.filename}`;
 
 		// create typescript file

@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../file-util';
 
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -15,17 +15,15 @@ import {
 	AngularCliComponentConfiguration,
 	AngularCliComponentConfigurationChangeDetection,
 	AngularCliComponentConfigurationInline,
-	AngularCliComponentConfigurationViewEncapsulation,
-
-	editorConfigurationWatcher
+	AngularCliComponentConfigurationViewEncapsulation
 } from '../config-watchers';
 
 import { createComponentTemplateCode } from './angular-component-template-code';
 import { createComponentTemplateSpec } from './angular-component-template-spec';
 
 export class AngularComponentCreator extends AngularCreator<AngularCliComponentConfiguration> {
-	constructor(context: vscode.ExtensionContext) {
-		super(context, {
+	constructor(angularCreatorInjects: AngularCreatorInjects) {
+		super(angularCreatorInjects, {
 			angularType: 'component',
 			command: 'createAngularComponent',
 
@@ -193,7 +191,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 			await fileUtil.createDirectory(directory);
 		}
 
-		const editorConfiguration = editorConfigurationWatcher();
+		const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 		const filename = `${directory}${path.sep}${selector.filename}`;
 
 		// create typescript file

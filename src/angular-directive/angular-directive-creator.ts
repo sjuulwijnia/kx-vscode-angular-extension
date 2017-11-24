@@ -5,23 +5,21 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../file-util';
 
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
 	AngularCliConfiguration,
 	AngularCliDefaultsConfiguration,
-	AngularCliDirectiveConfiguration,
-
-	editorConfigurationWatcher
+	AngularCliDirectiveConfiguration
 } from '../config-watchers';
 
 import { createDirectiveTemplateCode } from './angular-directive-template-code';
 import { createDirectiveTemplateSpec } from './angular-directive-template-spec';
 
 export class AngularDirectiveCreator extends AngularCreator<AngularCliDirectiveConfiguration> {
-	constructor(context: vscode.ExtensionContext) {
-		super(context, {
+	constructor(angularCreatorInjects: AngularCreatorInjects) {
+		super(angularCreatorInjects, {
 			angularType: 'directive',
 			command: 'createAngularDirective',
 
@@ -89,7 +87,7 @@ export class AngularDirectiveCreator extends AngularCreator<AngularCliDirectiveC
 			await fileUtil.createDirectory(directory);
 		}
 
-		const editorConfiguration = editorConfigurationWatcher();
+		const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 		const filename = `${directory}${path.sep}${selector.filename}`;
 
 		// create typescript file

@@ -11,7 +11,7 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 		return this._currentConfiguration;
 	}
 
-	constructor(
+	protected constructor(
 		private readonly filename: string
 	) { }
 

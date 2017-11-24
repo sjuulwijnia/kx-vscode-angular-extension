@@ -3,7 +3,7 @@ import * as ec from 'editorconfig-parser';
 
 import { BaseConfigWatcher } from './base-config-watcher';
 
-class EditorConfigWatcher extends BaseConfigWatcher<EditorConfiguration> {
+export class EditorConfigurationWatcher extends BaseConfigWatcher<EditorConfiguration> {
 	public get indenting(): string {
 		if (this.currentConfiguration.indent_style === 'tab') {
 			return '\t';
@@ -12,7 +12,12 @@ class EditorConfigWatcher extends BaseConfigWatcher<EditorConfiguration> {
 		return ' '.repeat(+this.currentConfiguration.indent_size);
 	}
 
-	constructor() {
+	private static _instance: EditorConfigurationWatcher = new EditorConfigurationWatcher();
+	public static get instance(): EditorConfigurationWatcher {
+		return EditorConfigurationWatcher._instance;
+	}
+
+	private constructor() {
 		super('.editorconfig');
 	}
 
@@ -44,9 +49,4 @@ export interface EditorConfiguration {
 	indent_style: "space" | "tab";
 	indent_size: string;
 	insert_final_newline: "true" | "false";
-}
-
-const _editorConfigWatcher = new EditorConfigWatcher();
-export function editorConfigurationWatcher() {
-	return _editorConfigWatcher;
 }

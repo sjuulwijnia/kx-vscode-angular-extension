@@ -4,13 +4,13 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import {
-	angularConfigurationWatcher,
 	AngularCliConfiguration,
 	AngularCliAppConfiguration,
 
 	AngularCliDefaultsItemConfiguration,
 
-	editorConfigurationWatcher
+	AngularConfigurationWatcher,
+	EditorConfigurationWatcher
 } from './config-watchers';
 
 import { AngularSelector } from './angular-selector';
@@ -51,21 +51,21 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	}
 
 	constructor(
-		context: vscode.ExtensionContext,
-		private readonly angularCreatorConfiguration: AngularCreatorConfiguration
+		protected readonly angularCreatorInjects: AngularCreatorInjects,
+		private readonly angularCreatorSettings: AngularCreatorSettings
 	) {
 		const commandWatcher = vscode.commands
-			.registerCommand(`kx-vscode-angular-extension.${angularCreatorConfiguration.command}`, uri => {
+			.registerCommand(`kx-vscode-angular-extension.${angularCreatorSettings.command}`, uri => {
 				this.onCommandTriggered(uri)
 			});
 
-		angularConfigurationWatcher().subscribe(angularConfiguration => {
+		angularCreatorInjects.angularConfigurationWatcher.subscribe(angularConfiguration => {
 			if (!!angularConfiguration) {
 				this.triggerConfigurationUpdate(angularConfiguration);
 			}
 		});
 
-		context.subscriptions.push(commandWatcher);
+		angularCreatorInjects.context.subscriptions.push(commandWatcher);
 	}
 
 	protected abstract onAngularConfigurationUpdated(angularDefaultsConfiguration: AngularCliConfiguration);
@@ -140,7 +140,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		const directory = fileUtil.getDirectoryFromUri(uri);
 
 		let prefix = this.angularApp.prefix;
-		switch (this.angularCreatorConfiguration.selectorPromptAppendPrefix) {
+		switch (this.angularCreatorSettings.selectorPromptAppendPrefix) {
 			case 'short':
 				break;
 
@@ -154,12 +154,12 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		}
 
 		// get component selector
-		const selectorFromPrompt = await this.prompt(this.angularCreatorConfiguration.selectorPrompt, prefix);
+		const selectorFromPrompt = await this.prompt(this.angularCreatorSettings.selectorPrompt, prefix);
 		if (!selectorFromPrompt) {
 			return;
 		}
 
-		const selector = new AngularSelector(selectorFromPrompt, this.angularApp.prefix, this.angularCreatorConfiguration.angularType);
+		const selector = new AngularSelector(selectorFromPrompt, this.angularApp.prefix, this.angularCreatorSettings.angularType);
 
 		// determine configuration style
 		let configuration: CONFIGURATION = Object.assign({}, this.configuration);
@@ -177,7 +177,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 					value: true
 				}
 			],
-			placeholder: `Select configuration style for ${this.angularCreatorConfiguration.angularType.toLowerCase()}...`
+			placeholder: `Select configuration style for ${this.angularCreatorSettings.angularType.toLowerCase()}...`
 		});
 		if (manualConfiguration) {
 			configuration = await this.createConfigurationManually();
@@ -208,16 +208,23 @@ export interface ExtensionConfiguration {
 	openCreatedFile: boolean;
 }
 
-export interface AngularCreatorConfiguration {
+export interface AngularCreatorSettings {
 	angularType: string;
 
 	command: string;
 
 	selectorPrompt: string;
-	selectorPromptAppendPrefix: AngularCreatorConfigurationAppendPrefixType;
+	selectorPromptAppendPrefix: AngularCreatorSettingsAppendPrefixType;
 }
 
-export type AngularCreatorConfigurationAppendPrefixType = true | false | 'short';
+export type AngularCreatorSettingsAppendPrefixType = true | false | 'short';
+
+export interface AngularCreatorInjects {
+	context: vscode.ExtensionContext;
+
+	angularConfigurationWatcher: AngularConfigurationWatcher;
+	editorConfigurationWatcher: EditorConfigurationWatcher;
+}
 
 export interface PromptListRequest<T> {
 	defaultValue: T;

@@ -4,25 +4,32 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
+import { AngularCreatorInjects } from './angular-creator';
 import { AngularComponentCreator } from './angular-component';
 import { AngularDirectiveCreator } from './angular-directive';
 import { AngularPipeCreator } from './angular-pipe';
 import { AngularServiceCreator } from './angular-service';
 
-import { angularConfigurationWatcher, editorConfigurationWatcher } from './config-watchers';
+import { AngularConfigurationWatcher, EditorConfigurationWatcher } from './config-watchers';
 
 const configuration = vscode.workspace.getConfiguration('kx-vscode-angular-extension');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	angularConfigurationWatcher().initialize(context);
-	editorConfigurationWatcher().initialize(context);
+	const injects: AngularCreatorInjects = {
+		context,
+		angularConfigurationWatcher: AngularConfigurationWatcher.instance,
+		editorConfigurationWatcher: EditorConfigurationWatcher.instance
+	};
 
-	const angularComponentCreator = new AngularComponentCreator(context);
-	const angularDirectiveCreator = new AngularDirectiveCreator(context);
-	const angularPipeCreator = new AngularPipeCreator(context);
-	const angularServiceCreator = new AngularServiceCreator(context);
+	injects.angularConfigurationWatcher.initialize(context);
+	injects.editorConfigurationWatcher.initialize(context);
+
+	const angularComponentCreator = new AngularComponentCreator(injects);
+	const angularDirectiveCreator = new AngularDirectiveCreator(injects);
+	const angularPipeCreator = new AngularPipeCreator(injects);
+	const angularServiceCreator = new AngularServiceCreator(injects);
 
 	// const disposable = vscode.commands.registerCommand('kx-vscode-angular-extension.createAngularObject', promptForCreationType);
 

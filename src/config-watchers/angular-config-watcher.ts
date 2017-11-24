@@ -1,8 +1,13 @@
 'use strict';
 import { BaseConfigWatcher } from './base-config-watcher';
 
-class AngularConfigWatcher extends BaseConfigWatcher<AngularCliConfiguration> {
-	constructor() {
+export class AngularConfigurationWatcher extends BaseConfigWatcher<AngularCliConfiguration> {
+	private static _instance: AngularConfigurationWatcher = new AngularConfigurationWatcher();
+	public static get instance(): AngularConfigurationWatcher {
+		return AngularConfigurationWatcher._instance;
+	}
+
+	private constructor() {
 		super('.angular-cli.json');
 	}
 
@@ -79,9 +84,4 @@ export interface AngularCliPipeConfiguration extends AngularCliDefaultsItemConfi
 
 export interface AngularCliServiceConfiguration extends AngularCliDefaultsItemConfiguration {
 
-}
-
-const _angularConfigWatcher = new AngularConfigWatcher();
-export function angularConfigurationWatcher() {
-	return _angularConfigWatcher;
 }
