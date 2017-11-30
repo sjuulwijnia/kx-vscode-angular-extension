@@ -4,7 +4,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-import { AngularCreatorInjects } from './angular-creator';
+import { AngularCreatorInjects } from './angular-creator-models';
 import { AngularComponentCreator } from './angular-component';
 import { AngularDirectiveCreator } from './angular-directive';
 import { AngularPipeCreator } from './angular-pipe';
@@ -30,6 +30,12 @@ export function activate(context: vscode.ExtensionContext) {
 	const angularDirectiveCreator = new AngularDirectiveCreator(injects);
 	const angularPipeCreator = new AngularPipeCreator(injects);
 	const angularServiceCreator = new AngularServiceCreator(injects);
+
+	vscode.workspace
+		.findFiles('./src/app/**/*.module.ts')
+		.then(uris => {
+			console.log(uris);
+		});
 
 	// const disposable = vscode.commands.registerCommand('kx-vscode-angular-extension.createAngularObject', promptForCreationType);
 

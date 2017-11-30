@@ -16,6 +16,14 @@ import {
 import { AngularSelector } from './angular-selector';
 import * as fileUtil from './file-util';
 
+import {
+	AngularCreatorInjects,
+	AngularCreatorSettings,
+	AngularCreatorSettingsAngularModuleType,
+	AngularCreatorSettingsAppendPrefixType
+} from './angular-creator-models';
+import { addToNearestNgModule } from './angular-creator-module-finder';
+
 export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsItemConfiguration> {
 	protected configuration: CONFIGURATION = null;
 
@@ -68,10 +76,31 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		angularCreatorInjects.context.subscriptions.push(commandWatcher);
 	}
 
-	protected abstract onAngularConfigurationUpdated(angularDefaultsConfiguration: AngularCliConfiguration);
-	protected async abstract createConfigurationManually(): Promise<CONFIGURATION>;
-	protected async abstract createFiles(configuration: CONFIGURATION, directory: string, selector: AngularSelector);
+	/**
+	 * When the Angular CLI configuration file is updated, this function is called to update the preconfigured options for this option.
+	 * @param angularConfiguration The new Angular CLI configuration.
+	 */
+	protected abstract onAngularConfigurationUpdated(angularConfiguration: AngularCliConfiguration);
 
+	/**
+	 * When the option is used to create a manual configuration, this function is called. Should return a configuration.
+	 */
+	protected async abstract createConfigurationManually(): Promise<CONFIGURATION>;
+
+	/**
+	 * Creates the files needed for this option.
+	 * @param configuration (Manual) configuration that is used to create this option.
+	 * @param directory Directory to create this option in.
+	 * @param selector AngularSelector class that contains all selector options.
+	 * @returns Path to the created file.
+	 */
+	protected async abstract createFiles(configuration: CONFIGURATION, directory: string, selector: AngularSelector): Promise<string>;
+
+	/**
+	 * Gets the Visual Studio Code configuration value at @valueName. Returns @defaultValue if not found. 
+	 * @param valueName The configuration value to look for.
+	 * @param defaultValue Default value if @valuename couldn't be found.
+	 */
 	protected getConfigurationValue<T>(valueName: string, defaultValue: T): T {
 		const configuration = vscode.workspace.getConfiguration(`kx-vscode-angular-extension`);
 		if (!!configuration) {
@@ -81,6 +110,10 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		return defaultValue;
 	}
 
+	/**
+	 * Opens the file at @path in the current workspace.
+	 * @param path Path to the file that needs to be opened.
+	 */
 	protected openFileInWindow(path: string) {
 		vscode.workspace
 			.openTextDocument(path)
@@ -89,6 +122,11 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 			});
 	}
 
+	/**
+	 * Prompts for a single string value.
+	 * @param prompt Prompt containing the question which should lead to a string.
+	 * @param prefix Prefix for the given answer. Optional.
+	 */
 	protected prompt(prompt: string, prefix = ''): Promise<string> {
 		const value = (!!prefix) ? prefix : '';
 		const valueSelection: [number, number] = [value.length, value.length];
@@ -137,8 +175,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	}
 
 	private async onCommandTriggered(uri: vscode.Uri) {
-		const directory = fileUtil.getDirectoryFromUri(uri);
-
+		let directory = fileUtil.getDirectoryFromUri(uri);
 		let prefix = this.angularApp.prefix;
 		switch (this.angularCreatorSettings.selectorPromptAppendPrefix) {
 			case 'short':
@@ -183,18 +220,54 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 			configuration = await this.createConfigurationManually();
 		}
 
-		// todo: only check if file exists if createBarrelFile = true
-		if (fs.existsSync(`${directory}/${selector.filename}.ts`)) {
+		if (!configuration.flat) {
+			// create container directory
+			directory += path.sep;
+			if (this.getConfigurationValue<boolean>('containerSuffix', false) === true) {
+				// use suffix
+				directory += selector.filename;
+			} else {
+				// don't use suffix
+				directory += selector.directory;
+			}
+
+			// check if location is valid
+			if (fs.existsSync(`${directory}`)) {
+				vscode.window.showErrorMessage(`Directory '${directory}' already exists.`);
+				return;
+			} else if (fs.existsSync(`${directory}.ts`)) {
+				vscode.window.showErrorMessage(`File '${directory}.ts' already exists.`);
+				return;
+			}
+
+			// valid => create directory
+			fileUtil.createDirectory(directory);
+		} else if (fs.existsSync(`${directory}/${selector.filename}.ts`)) {
 			vscode.window.showErrorMessage(`File '${directory}${path.sep}${selector.filename}.ts' already exists.`);
 			return;
 		}
 
-		if (!configuration.flat && fs.existsSync(`${directory}/${selector.filename}`)) {
-			vscode.window.showErrorMessage(`Directory '${directory}${path.sep}${selector.filename}' already exists.`);
-			return;
+		const filePath = await this.createFiles(configuration, directory, selector);
+
+		// open file if configured
+		if (this.getConfigurationValue<boolean>('openCreatedFile', true) === true) {
+			this.openFileInWindow(filePath);
 		}
 
-		await this.createFiles(configuration, directory, selector);
+		// add to nearest NgModule if configured
+		if (this.getConfigurationValue<boolean>('addToNgModule', true) === true) {
+			addToNearestNgModule({
+				angularConfiguration: configuration,
+
+				optionDirectory: directory,
+				optionDirectoryBarrelFile: (!configuration.flat && this.getConfigurationValue<boolean>('containerBarrelFile', true)),
+				optionModuleType: this.angularCreatorSettings.angularModuleType,
+				optionPath: filePath,
+				optionSelector: selector,
+
+				workspaceRoot: this.workspaceRoot
+			});
+		}
 	}
 
 	private triggerConfigurationUpdate(angularConfiguration: AngularCliConfiguration) {
@@ -204,26 +277,8 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 }
 
 export interface ExtensionConfiguration {
-	createBarrelFile: boolean;
+	containerBarrelFile: boolean;
 	openCreatedFile: boolean;
-}
-
-export interface AngularCreatorSettings {
-	angularType: string;
-
-	command: string;
-
-	selectorPrompt: string;
-	selectorPromptAppendPrefix: AngularCreatorSettingsAppendPrefixType;
-}
-
-export type AngularCreatorSettingsAppendPrefixType = true | false | 'short';
-
-export interface AngularCreatorInjects {
-	context: vscode.ExtensionContext;
-
-	angularConfigurationWatcher: AngularConfigurationWatcher;
-	editorConfigurationWatcher: EditorConfigurationWatcher;
 }
 
 export interface PromptListRequest<T> {

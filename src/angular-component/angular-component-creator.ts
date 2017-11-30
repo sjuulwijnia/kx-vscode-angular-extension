@@ -5,7 +5,8 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../file-util';
 
-import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
+import { AngularCreatorInjects } from '../angular-creator-models';
+import { AngularCreator } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -25,6 +26,8 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
 			angularType: 'component',
+			angularModuleType: 'declarations',
+
 			command: 'createAngularComponent',
 
 			selectorPrompt: 'Enter component selector...',
@@ -48,51 +51,53 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 	protected async createConfigurationManually() {
 		return new Promise<AngularCliComponentConfiguration>(async resolve => {
 			// determine HTML style
+			const inlineTemplateExtension = 'HTML';
 			const inlineTemplate = await this.promptList<AngularCliComponentConfigurationInline>({
 				defaultValue: this.configuration.inlineTemplate,
 				items: [
 					{
-						label: 'Separate file',
+						label: `Separate ${inlineTemplateExtension} file`,
 						description: '',
 						value: false
 					},
 					{
-						label: 'Inline',
+						label: `Inline ${inlineTemplateExtension}`,
 						description: '',
 						value: true
 					},
 					{
-						label: 'No HTML',
+						label: 'No template',
 						description: '',
 						detail: 'Creates NO template references.',
 						value: 'None'
 					}
 				],
-				placeholder: 'Select HTML location...'
+				placeholder: `Select component ${inlineTemplateExtension} location...`
 			});
 
 			// determine CSS style
+			const inlineStyleExtension = this.angularConfiguration.defaults.styleExt.toUpperCase();
 			const inlineStyle = await this.promptList<AngularCliComponentConfigurationInline>({
 				defaultValue: this.configuration.inlineStyle,
 				items: [
 					{
-						label: 'Separate file',
+						label: `Separate ${inlineStyleExtension} file`,
 						description: '',
 						value: false
 					},
 					{
-						label: 'Inline',
+						label: `Inline ${inlineStyleExtension}`,
 						description: '',
 						value: true
 					},
 					{
-						label: 'No style',
+						label: 'No styling',
 						description: '',
 						detail: 'Creates NO style references.',
 						value: 'None'
 					}
 				],
-				placeholder: 'Select CSS location...'
+				placeholder: `Select component ${inlineStyleExtension} location...`
 			});
 
 			// determine change detection
@@ -110,7 +115,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 						value: 'OnPush'
 					}
 				],
-				placeholder: 'Select change detection strategy...'
+				placeholder: 'Select component change detection strategy...'
 			});
 
 			// determine viewEncapsulation (only if inlineStyle is not 'None')
@@ -135,7 +140,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 							value: 'None'
 						}
 					],
-					placeholder: 'Select view encapsulation...'
+					placeholder: `Select component view encapsulation (${inlineStyleExtension} isolation)...`
 				});
 			};
 
@@ -143,7 +148,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 				defaultValue: this.configuration.flat,
 				items: [
 					{
-						label: 'Yes',
+						label: 'Yes, create a container directory',
 						description: '',
 						value: false
 					},
@@ -153,14 +158,14 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 						value: true
 					}
 				],
-				placeholder: 'Create container folder?'
+				placeholder: 'Create container directory for component?'
 			});
 
 			const spec = await this.promptList({
 				defaultValue: this.configuration.spec,
 				items: [
 					{
-						label: 'Yes',
+						label: 'Yes, create a unit test file',
 						description: '',
 						value: true
 					},
@@ -184,47 +189,40 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 		});
 	}
 
-	public async createFiles(configuration: AngularCliComponentConfiguration, directory: string, selector: AngularSelector) {
-		if (!configuration.flat) {
-			directory += `${path.sep}${selector.filename}`;
+	public async createFiles(configuration: AngularCliComponentConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+		return new Promise<string>(async resolve => {
+			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
+			const filename = `${directory}${path.sep}${selector.filename}`;
 
-			await fileUtil.createDirectory(directory);
-		}
+			// create typescript file
+			const typescript = editorConfiguration.makeCompliant(createComponentTemplateCode(configuration, selector, this.angularConfiguration.defaults.styleExt));
+			await fileUtil.createFile(`${filename}.ts`, typescript);
 
-		const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
-		const filename = `${directory}${path.sep}${selector.filename}`;
+			// create style file if configured
+			if (!configuration.inlineStyle) {
+				const style = editorConfiguration.makeCompliant(`:host { }`);
+				await fileUtil.createFile(`${filename}.${this.angularConfiguration.defaults.styleExt}`, style);
+			}
 
-		// create typescript file
-		const typescript = editorConfiguration.makeCompliant(createComponentTemplateCode(configuration, selector, this.angularConfiguration.defaults.styleExt));
-		await fileUtil.createFile(`${filename}.ts`, typescript);
+			// create html file if configured
+			if (!configuration.inlineTemplate) {
+				const html = editorConfiguration.makeCompliant(`<div>\n\t${selector.component} works!\n</div>`);
+				await fileUtil.createFile(`${filename}.html`, html);
+			}
 
-		// create style file if configured
-		if (!configuration.inlineStyle) {
-			const style = editorConfiguration.makeCompliant(`:host { }`);
-			await fileUtil.createFile(`${filename}.${this.angularConfiguration.defaults.styleExt}`, style);
-		}
+			// create barrel file if configured
+			if (!configuration.flat && this.getConfigurationValue('containerBarrelFile', true) === true) {
+				const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
+				await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
+			}
 
-		// create html file if configured
-		if (!configuration.inlineTemplate) {
-			const html = editorConfiguration.makeCompliant(`<div>\n\t${selector.component} works!\n</div>`);
-			await fileUtil.createFile(`${filename}.html`, html);
-		}
+			// create spec file if configured
+			if (configuration.spec) {
+				const spec = editorConfiguration.makeCompliant(createComponentTemplateSpec(selector));
+				await fileUtil.createFile(`${filename}.spec.ts`, spec);
+			}
 
-		// create barrel file if configured
-		if (!configuration.flat && this.getConfigurationValue('createBarrelFile', true) === true) {
-			const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
-			await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
-		}
-
-		// TODO: create spec file if configured
-		if (configuration.spec) {
-			const spec = editorConfiguration.makeCompliant(createComponentTemplateSpec(selector));
-			await fileUtil.createFile(`${filename}.spec.ts`, spec);
-		}
-
-		// open .component if configured
-		if (this.getConfigurationValue('openCreatedFile', true) === true) {
-			this.openFileInWindow(`${filename}.ts`);
-		}
+			resolve(`${filename}.ts`);
+		});
 	}
 }

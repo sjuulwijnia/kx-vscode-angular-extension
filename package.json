@@ -42,21 +42,33 @@
 				"type": "object",
 				"title": "kx-vscode-angular-extension",
 				"properties": {
-					"kx-vscode-angular-extension.createBarrelFile": {
+					"kx-vscode-angular-extension.addToNgModule": {
 						"type": "boolean",
 						"default": true,
-						"description": "Whether to use a barrel file (index.ts) or not for the files that are created in a containing folder (non-flat). Defaults to true."
+						"description": "When true, the created option will be added to the nearest NgModule it can find."
+					},
+					"kx-vscode-angular-extension.containerBarrelFile": {
+						"type": "boolean",
+						"default": true,
+						"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to true."
+					},
+					"kx-vscode-angular-extension.containerSuffix": {
+						"type": "boolean",
+						"default": false,
+						"description": "When true, the container component will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
 					},
 					"kx-vscode-angular-extension.openCreatedFile": {
 						"type": "boolean",
 						"default": true,
-						"description": "Whether to open the created file or not. Defaults to true."
+						"description": "When true, it will automagically open the created files. Defaults to true."
 					}
 				}
 			}
 		],
 		"configurationDefaults": {
-			"kx-vscode-angular-extension.createBarrelFile": true,
+			"kx-vscode-angular-extension.addToNgModule": true,
+			"kx-vscode-angular-extension.containerBarrelFile": true,
+			"kx-vscode-angular-extension.containerSuffix": false,
 			"kx-vscode-angular-extension.openCreatedFile": true
 		},
 		"menus": {

@@ -11,11 +11,11 @@ export class AngularSelector {
 	}
 
 	public get component(): string {
-		if (!this.input) {
+		if (!this.inputValidated) {
 			return '';
 		}
 
-		let selector = this.input
+		let selector = this.inputValidated
 			.split(/(?=[A-Z])/)
 			.join('-')
 			.replace(/ /, '-')
@@ -38,16 +38,20 @@ export class AngularSelector {
 		return `${this.prefix.toLowerCase()}${this.capitalize(this.pipe)}`;
 	}
 
+	public get directory(): string {
+		return this.filename.replace(`.${this.suffix}`, '');
+	}
+
 	public get filename(): string {
 		return `${this.component}.${this.suffix.toLowerCase()}`.substring(this.prefix.length + 1);
 	}
 
 	public get pipe(): string {
-		if (!this.input) {
+		if (!this.inputValidated) {
 			return '';
 		}
 
-		let pipe = this.input
+		let pipe = this.inputValidated
 			.split('-')
 			.map(s => this.capitalize(s))
 			.join('')
@@ -63,11 +67,21 @@ export class AngularSelector {
 		return this.decapitalize(pipe);
 	}
 
+	private readonly inputValidated: string = null;
+
+	public get inputInvalid() {
+		return this.inputValidated !== this.inputValidated;
+	}
+
 	constructor(
 		private readonly input: string,
 		private readonly prefix: string = '',
 		private readonly suffix: string = ''
-	) { }
+	) {
+		this.inputValidated = input
+			.split(/[\<\>\:\"\/\\\|\?\*\.\_]/gmi)
+			.join('-');
+	}
 
 	private capitalize(input: string): string {
 		if (!input) {

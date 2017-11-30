@@ -5,7 +5,8 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../file-util';
 
-import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
+import { AngularCreatorInjects } from '../angular-creator-models';
+import { AngularCreator } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -21,6 +22,8 @@ export class AngularDirectiveCreator extends AngularCreator<AngularCliDirectiveC
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
 			angularType: 'directive',
+			angularModuleType: 'declarations',
+
 			command: 'createAngularDirective',
 
 			selectorPrompt: 'Enter directive selector...',
@@ -80,35 +83,28 @@ export class AngularDirectiveCreator extends AngularCreator<AngularCliDirectiveC
 		});
 	}
 
-	public async createFiles(configuration: AngularCliDirectiveConfiguration, directory: string, selector: AngularSelector) {
-		if (!configuration.flat) {
-			directory += `${path.sep}${selector.filename}`;
+	public createFiles(configuration: AngularCliDirectiveConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+		return new Promise<string>(async resolve => {
+			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
+			const filename = `${directory}${path.sep}${selector.filename}`;
 
-			await fileUtil.createDirectory(directory);
-		}
+			// create typescript file
+			const typescript = editorConfiguration.makeCompliant(createDirectiveTemplateCode(configuration, selector));
+			await fileUtil.createFile(`${filename}.ts`, typescript);
 
-		const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
-		const filename = `${directory}${path.sep}${selector.filename}`;
+			// create barrel file if configured
+			if (!configuration.flat && this.getConfigurationValue('containerBarrelFile', true) === true) {
+				const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
+				await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
+			}
 
-		// create typescript file
-		const typescript = editorConfiguration.makeCompliant(createDirectiveTemplateCode(configuration, selector));
-		await fileUtil.createFile(`${filename}.ts`, typescript);
+			// create spec file if configured
+			if (configuration.spec) {
+				const spec = editorConfiguration.makeCompliant(createDirectiveTemplateSpec(configuration, selector));
+				await fileUtil.createFile(`${filename}.spec.ts`, spec);
+			}
 
-		// create barrel file if configured
-		if (!configuration.flat && this.getConfigurationValue('createBarrelFile', true) === true) {
-			const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
-			await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
-		}
-
-		// TODO: create spec file if configured
-		if (configuration.spec) {
-			const spec = editorConfiguration.makeCompliant(createDirectiveTemplateSpec(configuration, selector));
-			await fileUtil.createFile(`${filename}.spec.ts`, spec);
-		}
-
-		// open .component if configured
-		if (this.getConfigurationValue('openCreatedFile', true) === true) {
-			this.openFileInWindow(`${filename}.ts`);
-		}
+			resolve(`${filename}.ts`);
+		});
 	}
 }

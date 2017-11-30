@@ -22,21 +22,20 @@ During creation, you can choose to use the current configuration or to manually 
 * A **.editorconfig** is optional, but is highly recommended, as kx-vscode-angular-extension will try to adhere to the given standards as much as possible.
 
 ## Extension Settings
-
-* **kx-vscode-angular-extension.createBarrelFile**: whether to create a barrel file (_index.ts_) or not when a container folder is created. (Default: true)
-* **kx-vscode-angular-extension.openCreatedFile**: whether to automagically open the created file or not. This refers to the 'most important file', e.g. the _*.component.ts_ when creating a component and the _*.service.ts_ when creating a service. (Default: true)
+* **kx-vscode-angular-extension.addToNgModule**: When true, the created option will be added to the nearest NgModule it can find.
+* **kx-vscode-angular-extension.containerBarrelFile**: When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to true.
+* **kx-vscode-angular-extension.containerSuffix**: When true, the container component will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false.
+* **kx-vscode-angular-extension.openCreatedFile**: When true, it will automagically open the created files. Defaults to true.
 
 ## Known Issues
 
-* Unlinke **ng generate ...**, it doesn't look for the closest _NgModule_ and add the created option to it.
+..nothing? Or, you know.. missing Module creation, Guard creation.. that kind of stuff!
 
 ## Release Notes
 
 None so far!
 
 ## Up next
-
-* Resolving the nearest _NgModule_ and add the created option to it if configured!
 
 * Generalize replacing CLASS_REPLACE etc. in the templates.
 * Add some unit tests to guarantee functionality won't break.
