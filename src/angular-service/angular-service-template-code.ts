@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliServiceConfiguration } from '../config-watchers';
+import { ServiceConfiguration } from './angular-service-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createServiceTemplateCode(angularServiceConfiguration: AngularCliServiceConfiguration, angularSelector: AngularSelector) {
+export function createServiceTemplateCode(serviceConfiguration: ServiceConfiguration, angularSelector: AngularSelector) {
 	const serviceImports: string[] = [
 		'Injectable'
 	];

@@ -42,7 +42,7 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 	}
 
 	protected triggerCallbacks() {
-		this.callbacks.forEach(callback => {
+		this.callbacks.forEach((callback, i) => {
 			callback(this._currentConfiguration);
 		});
 	}

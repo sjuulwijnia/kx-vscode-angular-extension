@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 
 import {
 	AngularConfigurationWatcher,
-	EditorConfigurationWatcher
+	EditorConfigurationWatcher,
+	VisualStudioCodeConfigurationWatcher
 } from './config-watchers';
 
 export interface AngularCreatorSettings {
@@ -23,5 +24,6 @@ export interface AngularCreatorInjects {
 
 	angularConfigurationWatcher: AngularConfigurationWatcher;
 	editorConfigurationWatcher: EditorConfigurationWatcher;
+	vscodeConfigurationWatcher: VisualStudioCodeConfigurationWatcher;
 }
 

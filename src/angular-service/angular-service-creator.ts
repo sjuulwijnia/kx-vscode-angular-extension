@@ -11,14 +11,15 @@ import { AngularSelector } from '../angular-selector';
 
 import {
 	AngularCliConfiguration,
-	AngularCliDefaultsConfiguration,
-	AngularCliServiceConfiguration,
+	AngularCliDefaultsConfiguration
 } from '../config-watchers';
+
+import { ServiceConfiguration } from './angular-service-configuration';
 
 import { createServiceTemplateCode } from './angular-service-template-code';
 import { createServiceTemplateSpec } from './angular-service-template-spec';
 
-export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfiguration> {
+export class AngularServiceCreator extends AngularCreator<ServiceConfiguration> {
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
 			angularType: 'service',
@@ -31,17 +32,22 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 		});
 	}
 
-	protected onAngularConfigurationUpdated(angularConfiguration: AngularCliConfiguration) {
+	protected onConfigurationUpdated() {
 		this.configuration = {
 			flat: false,
 			spec: true,
 
-			...angularConfiguration.defaults.service
+			addToModule: true,
+			containerBarrelFile: false,
+			containerSuffix: false,
+
+			...this.angularConfiguration.defaults.service,
+			...this.extensionConfiguration.service
 		};
 	}
 
 	protected async createConfigurationManually() {
-		return new Promise<AngularCliServiceConfiguration>(async resolve => {
+		return new Promise<ServiceConfiguration>(async resolve => {
 			const flat = await this.promptList({
 				defaultValue: this.configuration.flat,
 				items: [
@@ -83,7 +89,7 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 		});
 	}
 
-	public createFiles(configuration: AngularCliServiceConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+	public createFiles(configuration: ServiceConfiguration, directory: string, selector: AngularSelector): Promise<string> {
 		return new Promise<string>(async resolve => {
 			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 			const filename = `${directory}${path.sep}${selector.filename}`;
@@ -92,15 +98,9 @@ export class AngularServiceCreator extends AngularCreator<AngularCliServiceConfi
 			const typescript = editorConfiguration.makeCompliant(createServiceTemplateCode(configuration, selector));
 			await fileUtil.createFile(`${filename}.ts`, typescript);
 
-			// create barrel file if configured
-			if (!configuration.flat && this.getConfigurationValue('containerBarrelFile', true) === true) {
-				const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
-				await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
-			}
-
 			// create spec file if configured
 			if (configuration.spec) {
-				const spec = editorConfiguration.makeCompliant(createServiceTemplateSpec(selector));
+				const spec = editorConfiguration.makeCompliant(createServiceTemplateSpec(configuration, selector));
 				await fileUtil.createFile(`${filename}.spec.ts`, spec);
 			}
 

@@ -50,12 +50,10 @@ export interface AngularCliDefaultsItemConfiguration {
 	spec: boolean;
 }
 
-export interface AngularCliComponentConfiguration {
+export interface AngularCliComponentConfiguration extends AngularCliDefaultsItemConfiguration {
 	changeDetection: AngularCliComponentConfigurationChangeDetection;
-	flat: boolean;
 	inlineStyle: AngularCliComponentConfigurationInline;
 	inlineTemplate: AngularCliComponentConfigurationInline;
-	spec: boolean;
 	viewEncapsulation: AngularCliComponentConfigurationViewEncapsulation;
 }
 export type AngularCliComponentConfigurationChangeDetection = 'Default' | 'OnPush';

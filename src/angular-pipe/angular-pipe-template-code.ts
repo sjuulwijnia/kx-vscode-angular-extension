@@ -2,7 +2,7 @@
 import { AngularCliPipeConfiguration } from '../config-watchers';
 import { AngularSelector } from '../angular-selector';
 
-export function createPipeTemplateCode(angularServiceConfiguration: AngularCliPipeConfiguration, angularSelector: AngularSelector) {
+export function createPipeTemplateCode(angularPipeConfiguration: AngularCliPipeConfiguration, angularSelector: AngularSelector) {
 	const pipeImports: string[] = [
 		'Pipe',
 		'PipeTransform'
@@ -24,9 +24,7 @@ const pipeTemplateCode = `import { ${IMPORTS_REPLACE} } from '@angular/core';
   name: '${NAME_REPLACE}'
 })
 export class ${CLASS_REPLACE} implements PipeTransform {
-
   transform(value: any, args?: any): any {
     return null;
   }
-
 }`

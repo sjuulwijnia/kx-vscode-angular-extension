@@ -1,7 +1,8 @@
 'use strict';
+import { ServiceConfiguration } from './angular-service-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createServiceTemplateSpec(angularSelector: AngularSelector) {
+export function createServiceTemplateSpec(serviceConfiguration: ServiceConfiguration, angularSelector: AngularSelector) {
 	return serviceTemplateSpec
 		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
 		.replace(new RegExp(SERVICE_REPLACE, 'gm'), angularSelector.filename);

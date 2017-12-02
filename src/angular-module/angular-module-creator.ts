@@ -12,45 +12,44 @@ import { AngularSelector } from '../angular-selector';
 import {
 	AngularCliConfiguration,
 	AngularCliDefaultsConfiguration,
-	AngularCliDirectiveConfiguration,
 
-	ExtensionDirectiveConfiguration
+	AngularCliModuleConfiguration,
+	ExtensionModuleConfiguration
 } from '../config-watchers';
 
-import { createDirectiveTemplateCode } from './angular-directive-template-code';
-import { createDirectiveTemplateSpec } from './angular-directive-template-spec';
+import { createModuleTemplateCode } from './angular-module-template-code';
 
-export interface DirectiveConfiguration extends AngularCliDirectiveConfiguration, ExtensionDirectiveConfiguration { }
+export interface ModuleConfiguration extends AngularCliModuleConfiguration, ExtensionModuleConfiguration { }
 
-export class AngularDirectiveCreator extends AngularCreator<DirectiveConfiguration> {
+export class AngularModuleCreator extends AngularCreator<ModuleConfiguration> {
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
-			angularType: 'directive',
-			angularModuleType: 'declarations',
+			angularType: 'module',
+			angularModuleType: 'imports',
 
-			command: 'createAngularDirective',
+			command: 'createAngularModule',
 
-			selectorPrompt: 'Enter directive selector...',
-			selectorPromptAppendPrefix: 'short'
+			selectorPrompt: 'Enter module class name...',
+			selectorPromptAppendPrefix: false
 		});
 	}
 
 	protected onConfigurationUpdated() {
 		this.configuration = {
 			flat: false,
-			spec: true,
+			spec: false,
 
-			addToModule: true,
+			addToModule: false,
 			containerBarrelFile: false,
 			containerSuffix: false,
 
-			...this.angularConfiguration.defaults.directive,
-			...this.extensionConfiguration.directive
+			...this.angularConfiguration.defaults.module,
+			...this.extensionConfiguration.module
 		};
 	}
 
 	protected async createConfigurationManually() {
-		return new Promise<DirectiveConfiguration>(async resolve => {
+		return new Promise<ModuleConfiguration>(async resolve => {
 			const flat = await this.promptList({
 				defaultValue: this.configuration.flat,
 				items: [
@@ -92,20 +91,20 @@ export class AngularDirectiveCreator extends AngularCreator<DirectiveConfigurati
 		});
 	}
 
-	public createFiles(configuration: DirectiveConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+	public createFiles(configuration: ModuleConfiguration, directory: string, selector: AngularSelector): Promise<string> {
 		return new Promise<string>(async resolve => {
 			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 			const filename = `${directory}${path.sep}${selector.filename}`;
 
 			// create typescript file
-			const typescript = editorConfiguration.makeCompliant(createDirectiveTemplateCode(configuration, selector));
+			const typescript = editorConfiguration.makeCompliant(createModuleTemplateCode(configuration, selector));
 			await fileUtil.createFile(`${filename}.ts`, typescript);
 
-			// create spec file if configured
-			if (configuration.spec) {
-				const spec = editorConfiguration.makeCompliant(createDirectiveTemplateSpec(configuration, selector));
-				await fileUtil.createFile(`${filename}.spec.ts`, spec);
-			}
+			// TODO: reimplement create spec file if configured
+			// if (configuration.spec) {
+			// 	const spec = editorConfiguration.makeCompliant(createPipeTemplateSpec(configuration, selector));
+			// 	await fileUtil.createFile(`${filename}.spec.ts`, spec);
+			// }
 
 			resolve(`${filename}.ts`);
 		});

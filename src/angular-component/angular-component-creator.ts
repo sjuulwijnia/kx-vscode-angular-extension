@@ -16,13 +16,17 @@ import {
 	AngularCliComponentConfiguration,
 	AngularCliComponentConfigurationChangeDetection,
 	AngularCliComponentConfigurationInline,
-	AngularCliComponentConfigurationViewEncapsulation
+	AngularCliComponentConfigurationViewEncapsulation,
+
+	ExtensionComponentConfiguration
 } from '../config-watchers';
 
 import { createComponentTemplateCode } from './angular-component-template-code';
 import { createComponentTemplateSpec } from './angular-component-template-spec';
 
-export class AngularComponentCreator extends AngularCreator<AngularCliComponentConfiguration> {
+export interface ComponentConfiguration extends AngularCliComponentConfiguration, ExtensionComponentConfiguration { }
+
+export class AngularComponentCreator extends AngularCreator<ComponentConfiguration> {
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
 			angularType: 'component',
@@ -35,7 +39,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 		});
 	}
 
-	protected onAngularConfigurationUpdated(angularConfiguration: AngularCliConfiguration) {
+	protected onConfigurationUpdated() {
 		this.configuration = {
 			changeDetection: 'Default',
 			flat: false,
@@ -44,12 +48,17 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 			spec: true,
 			viewEncapsulation: 'Emulated',
 
-			...angularConfiguration.defaults.component
+			addToModule: true,
+			containerBarrelFile: false,
+			containerSuffix: false,
+
+			...this.angularConfiguration.defaults.component,
+			...this.extensionConfiguration.component
 		};
 	}
 
 	protected async createConfigurationManually() {
-		return new Promise<AngularCliComponentConfiguration>(async resolve => {
+		return new Promise<ComponentConfiguration>(async resolve => {
 			// determine HTML style
 			const inlineTemplateExtension = 'HTML';
 			const inlineTemplate = await this.promptList<AngularCliComponentConfigurationInline>({
@@ -189,7 +198,7 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 		});
 	}
 
-	public async createFiles(configuration: AngularCliComponentConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+	public async createFiles(configuration: ComponentConfiguration, directory: string, selector: AngularSelector): Promise<string> {
 		return new Promise<string>(async resolve => {
 			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 			const filename = `${directory}${path.sep}${selector.filename}`;
@@ -208,12 +217,6 @@ export class AngularComponentCreator extends AngularCreator<AngularCliComponentC
 			if (!configuration.inlineTemplate) {
 				const html = editorConfiguration.makeCompliant(`<div>\n\t${selector.component} works!\n</div>`);
 				await fileUtil.createFile(`${filename}.html`, html);
-			}
-
-			// create barrel file if configured
-			if (!configuration.flat && this.getConfigurationValue('containerBarrelFile', true) === true) {
-				const index = editorConfiguration.makeCompliant(`export * from './${selector.filename}';`);
-				await fileUtil.createFile(`${directory}${path.sep}index.ts`, index);
 			}
 
 			// create spec file if configured

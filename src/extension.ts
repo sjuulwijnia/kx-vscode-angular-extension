@@ -1,46 +1,39 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as vscode from 'vscode';
 
 import { AngularCreatorInjects } from './angular-creator-models';
 import { AngularComponentCreator } from './angular-component';
 import { AngularDirectiveCreator } from './angular-directive';
+import { AngularModuleCreator } from './angular-module';
 import { AngularPipeCreator } from './angular-pipe';
 import { AngularServiceCreator } from './angular-service';
 
-import { AngularConfigurationWatcher, EditorConfigurationWatcher } from './config-watchers';
+import {
+	AngularConfigurationWatcher,
+	EditorConfigurationWatcher,
+	VisualStudioCodeConfigurationWatcher
+} from './config-watchers';
 
-const configuration = vscode.workspace.getConfiguration('kx-vscode-angular-extension');
-
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	const injects: AngularCreatorInjects = {
 		context,
 		angularConfigurationWatcher: AngularConfigurationWatcher.instance,
-		editorConfigurationWatcher: EditorConfigurationWatcher.instance
+		editorConfigurationWatcher: EditorConfigurationWatcher.instance,
+		vscodeConfigurationWatcher: VisualStudioCodeConfigurationWatcher.instance
 	};
 
 	injects.angularConfigurationWatcher.initialize(context);
 	injects.editorConfigurationWatcher.initialize(context);
+	injects.vscodeConfigurationWatcher.initialize(context);
 
 	const angularComponentCreator = new AngularComponentCreator(injects);
 	const angularDirectiveCreator = new AngularDirectiveCreator(injects);
+	const angularModuleCreator = new AngularModuleCreator(injects);
 	const angularPipeCreator = new AngularPipeCreator(injects);
 	const angularServiceCreator = new AngularServiceCreator(injects);
-
-	vscode.workspace
-		.findFiles('./src/app/**/*.module.ts')
-		.then(uris => {
-			console.log(uris);
-		});
-
-	// const disposable = vscode.commands.registerCommand('kx-vscode-angular-extension.createAngularObject', promptForCreationType);
-
-	// context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {
+
+}

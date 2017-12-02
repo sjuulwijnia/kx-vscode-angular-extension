@@ -27,6 +27,11 @@
 				"title": "New Angular directive..."
 			},
 			{
+				"command": "kx-vscode-angular-extension.createAngularModule",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular module..."
+			},
+			{
 				"command": "kx-vscode-angular-extension.createAngularPipe",
 				"category": "kx-vscode-angular-extension",
 				"title": "New Angular pipe..."
@@ -40,36 +45,217 @@
 		"configuration": [
 			{
 				"type": "object",
-				"title": "kx-vscode-angular-extension",
+				"title": "Visual Studio Code Angular Extension",
 				"properties": {
-					"kx-vscode-angular-extension.addToNgModule": {
-						"type": "boolean",
-						"default": true,
-						"description": "When true, the created option will be added to the nearest NgModule it can find."
-					},
-					"kx-vscode-angular-extension.containerBarrelFile": {
-						"type": "boolean",
-						"default": true,
-						"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to true."
-					},
-					"kx-vscode-angular-extension.containerSuffix": {
-						"type": "boolean",
-						"default": false,
-						"description": "When true, the container component will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
-					},
-					"kx-vscode-angular-extension.openCreatedFile": {
-						"type": "boolean",
-						"default": true,
-						"description": "When true, it will automagically open the created files. Defaults to true."
+					"kx-vscode-angular-extension": {
+						"type": "object",
+						"default": {
+							"global": {
+								"openCreatedFile": true
+							},
+							"component": {
+								"addToModule": true,
+								"containerBarrelFile": false,
+								"containerSuffix": false
+							},
+							"directive": {
+								"addToModule": true,
+								"containerBarrelFile": false,
+								"containerSuffix": false
+							},
+							"module": {
+								"addToModule": true,
+								"containerBarrelFile": false,
+								"containerSuffix": false
+							},
+							"pipe": {
+								"addToModule": true,
+								"containerBarrelFile": false,
+								"containerSuffix": false
+							},
+							"service": {
+								"addToModule": true,
+								"containerBarrelFile": false,
+								"containerSuffix": false
+							}
+						},
+						"description": "Contains the configuration for the kx-vscode-angular-extension. This configuration extends the @angular/cli configuration and allows for advanced options.",
+						"properties": {
+							"global": {
+								"type": "object",
+								"default": {
+									"openCreatedFile": true
+								},
+								"description": "Contains the global extension configuration, used for all options.",
+								"properties": {
+									"openCreatedFile": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, it will automagically open the created option. Defaults to true."
+									}
+								}
+							},
+							"component": {
+								"type": "object",
+								"default": {
+									"addToModule": true,
+									"containerBarrelFile": false,
+									"containerSuffix": false
+								},
+								"description": "Contains the extension configuration for component generation.",
+								"properties": {
+									"addToModule": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, the created component will be added to the nearest NgModule it can find. Defaults to true."
+									},
+									"containerBarrelFile": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to false."
+									},
+									"containerSuffix": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									}
+								}
+							},
+							"directive": {
+								"type": "object",
+								"default": {
+									"addToModule": true,
+									"containerBarrelFile": false,
+									"containerSuffix": false
+								},
+								"description": "Contains the extension configuration for directive generation.",
+								"properties": {
+									"addToModule": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, the created directive will be added to the nearest NgModule it can find. Defaults to true."
+									},
+									"containerBarrelFile": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to false."
+									},
+									"containerSuffix": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.directive'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									}
+								}
+							},
+							"module": {
+								"type": "object",
+								"description": "Contains the extension configuration for module generation.",
+								"properties": {
+									"addToModule": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, the created module will be added to the nearest NgModule it can find. Defaults to true."
+									},
+									"containerBarrelFile": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to false."
+									},
+									"containerSuffix": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard.module'), when false, it will not be suffixed (e.g.: 'dashboard'). Defaults to false."
+									}
+								}
+							},
+							"pipe": {
+								"type": "object",
+								"default": {
+									"addToModule": true,
+									"containerBarrelFile": false,
+									"containerSuffix": false
+								},
+								"description": "Contains the extension configuration for pipe generation.",
+								"properties": {
+									"addToModule": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, the created pipe will be added to the nearest NgModule it can find. Defaults to true."
+									},
+									"containerBarrelFile": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to false."
+									},
+									"containerSuffix": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.pipe'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									}
+								}
+							},
+							"service": {
+								"type": "object",
+								"default": {
+									"addToModule": true,
+									"containerBarrelFile": false,
+									"containerSuffix": false
+								},
+								"description": "Contains the extension configuration for service generation.",
+								"properties": {
+									"addToModule": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, the created service will be added to the nearest NgModule it can find. Defaults to true."
+									},
+									"containerBarrelFile": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to false."
+									},
+									"containerSuffix": {
+										"type": "boolean",
+										"default": false,
+										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.service'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 		],
 		"configurationDefaults": {
-			"kx-vscode-angular-extension.addToNgModule": true,
-			"kx-vscode-angular-extension.containerBarrelFile": true,
-			"kx-vscode-angular-extension.containerSuffix": false,
-			"kx-vscode-angular-extension.openCreatedFile": true
+			"kx-vscode-angular-extension": {
+				"global": {
+					"openCreatedFile": true
+				},
+				"component": {
+					"addToModule": true,
+					"containerBarrelFile": false,
+					"containerSuffix": false
+				},
+				"directive": {
+					"addToModule": true,
+					"containerBarrelFile": false,
+					"containerSuffix": false
+				},
+				"module": {
+					"addToModule": true,
+					"containerBarrelFile": false,
+					"containerSuffix": false
+				},
+				"pipe": {
+					"addToModule": true,
+					"containerBarrelFile": false,
+					"containerSuffix": false
+				},
+				"service": {
+					"addToModule": true,
+					"containerBarrelFile": false,
+					"containerSuffix": false
+				}
+			}
 		},
 		"menus": {
 			"explorer/context": [
@@ -78,15 +264,19 @@
 					"group": "kx-vscode-angular-extension"
 				},
 				{
+					"command": "kx-vscode-angular-extension.createAngularService",
+					"group": "kx-vscode-angular-extension"
+				},
+				{
+					"command": "kx-vscode-angular-extension.createAngularModule",
+					"group": "kx-vscode-angular-extension"
+				},
+				{
 					"command": "kx-vscode-angular-extension.createAngularDirective",
 					"group": "kx-vscode-angular-extension"
 				},
 				{
 					"command": "kx-vscode-angular-extension.createAngularPipe",
-					"group": "kx-vscode-angular-extension"
-				},
-				{
-					"command": "kx-vscode-angular-extension.createAngularService",
 					"group": "kx-vscode-angular-extension"
 				}
 			]

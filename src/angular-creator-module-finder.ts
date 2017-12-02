@@ -155,23 +155,6 @@ class AngularCreatorModuleFinder {
 		});
 	}
 
-	private handleImportStatement(lastImportStatement: ts.ImportDeclaration, workspaceEdit: vscode.WorkspaceEdit) {
-		return new Promise(resolve => {
-			const relativeDestination = this.configuration.optionDirectoryBarrelFile ?
-				this.configuration.optionDirectory :
-				this.configuration.optionPath.replace(/\.ts$/, '');
-			const relativeFrom = fileUtil.getDirectoryFromUri(this.moduleUri);
-
-			const relative = path
-				.relative(relativeFrom, relativeDestination)
-				.replace(new RegExp(`\\${path.sep}`, 'gm'), '/');
-
-			this.insertDocumentContents(workspaceEdit, this.moduleUri, lastImportStatement, `\nimport { ${this.configuration.optionSelector.clazz} } from './${relative}';`);
-
-			resolve();
-		});
-	}
-
 	private handleNgModuleDeclaration(ngModuleDeclaration: ts.Decorator, workspaceEdit: vscode.WorkspaceEdit) {
 		return new Promise(resolve => {
 			const expression = ngModuleDeclaration.expression;
@@ -207,15 +190,18 @@ class AngularCreatorModuleFinder {
 
 				const initializer = ngModuleConfigurationOption.initializer;
 				if (ts.isArrayLiteralExpression(initializer)) {
-					// it's an array! awesome
+					// it's an array! insert it
 
 					const childCount = initializer.elements.length;
 
 					if (childCount === 0) {
+						// empty array, just replace with one that has this value
 						this.replaceDocumentContents(workspaceEdit, this.moduleUri, initializer, ` [\n\t\t${this.configuration.optionSelector.clazz}\n\t]`)
 					} else {
+						// array with children; append the array with the new value
 						const lastChild = initializer.elements[childCount - 1];
 
+						// TODO: if the last element ends with a ',', it will cause a compilation error
 						this.insertDocumentContents(workspaceEdit, this.moduleUri, lastChild, `,\n\t\t${this.configuration.optionSelector.clazz}`)
 					}
 				} else {
@@ -225,8 +211,25 @@ class AngularCreatorModuleFinder {
 					}
 				}
 			} else {
-				// TODO: create property in NgModule declaration
+				// TODO: insert property in NgModule declaration
 			}
+
+			resolve();
+		});
+	}
+
+	private handleImportStatement(lastImportStatement: ts.ImportDeclaration, workspaceEdit: vscode.WorkspaceEdit) {
+		return new Promise(resolve => {
+			const relativeDestination = this.configuration.optionDirectoryBarrelFile ?
+				this.configuration.optionDirectory :
+				this.configuration.optionPath.replace(/\.ts$/, '');
+			const relativeFrom = fileUtil.getDirectoryFromUri(this.moduleUri);
+
+			const relative = path
+				.relative(relativeFrom, relativeDestination)
+				.replace(new RegExp(`\\${path.sep}`, 'gm'), '/');
+
+			this.insertDocumentContents(workspaceEdit, this.moduleUri, lastImportStatement, `\nimport { ${this.configuration.optionSelector.clazz} } from './${relative}';`);
 
 			resolve();
 		});

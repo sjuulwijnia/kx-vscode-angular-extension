@@ -2,7 +2,7 @@
 import { AngularCliDirectiveConfiguration } from '../config-watchers';
 import { AngularSelector } from '../angular-selector';
 
-export function createDirectiveTemplateCode(angularServiceConfiguration: AngularCliDirectiveConfiguration, angularSelector: AngularSelector) {
+export function createDirectiveTemplateCode(angularDirectiveConfiguration: AngularCliDirectiveConfiguration, angularSelector: AngularSelector) {
 	const directiveImports: string[] = [
 		'Directive'
 	];
