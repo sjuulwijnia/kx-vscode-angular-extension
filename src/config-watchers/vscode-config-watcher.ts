@@ -22,6 +22,7 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 				global: {
 					openCreatedFile: true
 				},
+
 				angular: {
 					component: {
 						addToModule: true,
@@ -48,43 +49,60 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 						containerBarrelFile: false,
 						containerSuffix: false
 					}
+				},
+
+				typescript: {
+					showClassInContextMenu: false,
+					showEnumInContextMenu: false,
+					showInterfaceInContextMenu: false
 				}
-			}
+			};
 		} else {
+			// global extension configuration
 			extensionConfiguration.global = extensionConfiguration.global || {
 				openCreatedFile: true
 			};
+
+			// angular extension configuration
 			extensionConfiguration.angular = extensionConfiguration.angular || {
-				component: extensionConfiguration.angular.component || {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
+				component: null,
+				directive: null,
+				module: null,
+				pipe: null,
+				service: null
+			};
+			extensionConfiguration.angular.component = extensionConfiguration.angular.component || {
+				addToModule: true,
+				containerBarrelFile: false,
+				containerSuffix: false
+			};
+			extensionConfiguration.angular.directive = extensionConfiguration.angular.directive || {
+				addToModule: true,
+				containerBarrelFile: false,
+				containerSuffix: false
+			};
+			extensionConfiguration.angular.module = extensionConfiguration.angular.module || {
+				addToModule: false,
+				containerBarrelFile: false,
+				containerSuffix: false,
+				createModuleComponent: true
+			};
+			extensionConfiguration.angular.pipe = extensionConfiguration.angular.pipe || {
+				addToModule: true,
+				containerBarrelFile: false,
+				containerSuffix: false
+			};
+			extensionConfiguration.angular.service = extensionConfiguration.angular.service || {
+				addToModule: true,
+				containerBarrelFile: false,
+				containerSuffix: false
+			};
 
-				directive: extensionConfiguration.angular.directive || {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-
-				module: extensionConfiguration.angular.module || {
-					addToModule: false,
-					containerBarrelFile: false,
-					containerSuffix: false,
-					createModuleComponent: true
-				},
-
-				pipe: extensionConfiguration.angular.pipe || {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-
-				service: extensionConfiguration.angular.service || {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				}
+			// typescript extension configuration
+			extensionConfiguration.typescript = extensionConfiguration.typescript || {
+				showClassInContextMenu: false,
+				showEnumInContextMenu: false,
+				showInterfaceInContextMenu: false
 			};
 		}
 
@@ -106,6 +124,7 @@ export interface ExtensionConfiguration {
 	global: ExtensionGlobalConfiguration;
 
 	angular: ExtensionAngularConfiguration;
+	typescript: ExtensionTypescriptConfiguration;
 }
 
 export interface ExtensionGlobalConfiguration {
@@ -140,4 +159,10 @@ export interface ExtensionPipeConfiguration extends ExtensionDefaultOptionConfig
 }
 export interface ExtensionServiceConfiguration extends ExtensionDefaultOptionConfiguration {
 
+}
+
+export interface ExtensionTypescriptConfiguration {
+	showClassInContextMenu: boolean;
+	showEnumInContextMenu: boolean;
+	showInterfaceInContextMenu: boolean;
 }
