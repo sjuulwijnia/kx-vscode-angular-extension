@@ -25,8 +25,6 @@ export class AngularServiceCreator extends AngularCreator<ServiceConfiguration> 
 			angularType: 'service',
 			angularModuleType: 'providers',
 
-			command: 'createAngularService',
-
 			selectorPrompt: 'Enter service class name...',
 			selectorPromptAppendPrefix: false
 		});

@@ -44,28 +44,33 @@
 							"component": {
 								"addToModule": true,
 								"containerBarrelFile": false,
-								"containerSuffix": false
+								"containerSuffix": false,
+								"showInContextMenu": true
 							},
 							"directive": {
 								"addToModule": true,
 								"containerBarrelFile": false,
-								"containerSuffix": false
+								"containerSuffix": false,
+								"showInContextMenu": true
 							},
 							"module": {
 								"addToModule": true,
 								"containerBarrelFile": false,
 								"containerSuffix": false,
-								"createDefaultComponent": true
+								"createDefaultComponent": true,
+								"showInContextMenu": true
 							},
 							"pipe": {
 								"addToModule": true,
 								"containerBarrelFile": false,
-								"containerSuffix": false
+								"containerSuffix": false,
+								"showInContextMenu": true
 							},
 							"service": {
 								"addToModule": true,
 								"containerBarrelFile": false,
-								"containerSuffix": false
+								"containerSuffix": false,
+								"showInContextMenu": true
 							}
 						},
 						"description": "Contains the configuration for the kx-vscode-angular-extension. This configuration extends the @angular/cli configuration and allows for advanced options.",
@@ -89,7 +94,8 @@
 								"default": {
 									"addToModule": true,
 									"containerBarrelFile": false,
-									"containerSuffix": false
+									"containerSuffix": false,
+									"showInContextMenu": true
 								},
 								"description": "Contains the extension configuration for component generation.",
 								"properties": {
@@ -107,6 +113,11 @@
 										"type": "boolean",
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									},
+									"showInContextMenu": {
+										"type": "boolean",
+										"default": true,
+										"description": "Whether to show this option in the explorer context menu or not. Might require a window reload. Defaults to true."
 									}
 								}
 							},
@@ -115,7 +126,8 @@
 								"default": {
 									"addToModule": true,
 									"containerBarrelFile": false,
-									"containerSuffix": false
+									"containerSuffix": false,
+									"showInContextMenu": true
 								},
 								"description": "Contains the extension configuration for directive generation.",
 								"properties": {
@@ -134,15 +146,22 @@
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.directive'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
 									},
-									"createDefaultComponent": {
+									"showInContextMenu": {
 										"type": "boolean",
 										"default": true,
-										"description": "When true, upon module creation a component will also be created for that module. Defaults to true."
+										"description": "Whether to show this option in the explorer context menu or not. Might require a window reload. Defaults to true."
 									}
 								}
 							},
 							"module": {
 								"type": "object",
+								"default": {
+									"addToModule": true,
+									"containerBarrelFile": false,
+									"containerSuffix": false,
+									"createDefaultComponent": true,
+									"showInContextMenu": true
+								},
 								"description": "Contains the extension configuration for module generation.",
 								"properties": {
 									"addToModule": {
@@ -159,6 +178,16 @@
 										"type": "boolean",
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard.module'), when false, it will not be suffixed (e.g.: 'dashboard'). Defaults to false."
+									},
+									"createDefaultComponent": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, upon module creation a component will also be created for that module. Defaults to true."
+									},
+									"showInContextMenu": {
+										"type": "boolean",
+										"default": true,
+										"description": "Whether to show this option in the explorer context menu or not. Might require a window reload. Defaults to true."
 									}
 								}
 							},
@@ -167,7 +196,8 @@
 								"default": {
 									"addToModule": true,
 									"containerBarrelFile": false,
-									"containerSuffix": false
+									"containerSuffix": false,
+									"showInContextMenu": true
 								},
 								"description": "Contains the extension configuration for pipe generation.",
 								"properties": {
@@ -185,6 +215,11 @@
 										"type": "boolean",
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.pipe'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									},
+									"showInContextMenu": {
+										"type": "boolean",
+										"default": true,
+										"description": "Whether to show this option in the explorer context menu or not. Might require a window reload. Defaults to true."
 									}
 								}
 							},
@@ -193,7 +228,8 @@
 								"default": {
 									"addToModule": true,
 									"containerBarrelFile": false,
-									"containerSuffix": false
+									"containerSuffix": false,
+									"showInContextMenu": true
 								},
 								"description": "Contains the extension configuration for service generation.",
 								"properties": {
@@ -211,6 +247,11 @@
 										"type": "boolean",
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.service'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									},
+									"showInContextMenu": {
+										"type": "boolean",
+										"default": true,
+										"description": "Whether to show this option in the explorer context menu or not. Might require a window reload. Defaults to true."
 									}
 								}
 							}
@@ -227,78 +268,88 @@
 				"component": {
 					"addToModule": true,
 					"containerBarrelFile": false,
-					"containerSuffix": false
+					"containerSuffix": false,
+					"showInContextMenu": true
 				},
 				"directive": {
 					"addToModule": true,
 					"containerBarrelFile": false,
-					"containerSuffix": false
+					"containerSuffix": false,
+					"showInContextMenu": true
 				},
 				"module": {
 					"addToModule": true,
 					"containerBarrelFile": false,
-					"containerSuffix": false
+					"containerSuffix": false,
+					"showInContextMenu": true
 				},
 				"pipe": {
 					"addToModule": true,
 					"containerBarrelFile": false,
-					"containerSuffix": false
+					"containerSuffix": false,
+					"showInContextMenu": true
 				},
 				"service": {
 					"addToModule": true,
 					"containerBarrelFile": false,
-					"containerSuffix": false
+					"containerSuffix": false,
+					"showInContextMenu": true
 				}
 			}
 		},
 		"commands": [
 			{
-				"command": "kx-vscode-angular-extension.createAngularComponent",
-				"category": "kx-vscode-angular-extension",
+				"command": "kx-vscode-angular-extension:angular:component",
+				"category": "kx-vscode-angular-extension:angular",
 				"title": "New Angular component..."
 			},
 			{
-				"command": "kx-vscode-angular-extension.createAngularDirective",
-				"category": "kx-vscode-angular-extension",
+				"command": "kx-vscode-angular-extension:angular:directive",
+				"category": "kx-vscode-angular-extension:angular",
 				"title": "New Angular directive..."
 			},
 			{
-				"command": "kx-vscode-angular-extension.createAngularModule",
-				"category": "kx-vscode-angular-extension",
+				"command": "kx-vscode-angular-extension:angular:module",
+				"category": "kx-vscode-angular-extension:angular",
 				"title": "New Angular module..."
 			},
 			{
-				"command": "kx-vscode-angular-extension.createAngularPipe",
-				"category": "kx-vscode-angular-extension",
+				"command": "kx-vscode-angular-extension:angular:pipe",
+				"category": "kx-vscode-angular-extension:angular",
 				"title": "New Angular pipe..."
 			},
 			{
-				"command": "kx-vscode-angular-extension.createAngularService",
-				"category": "kx-vscode-angular-extension",
+				"command": "kx-vscode-angular-extension:angular:service",
+				"category": "kx-vscode-angular-extension:angular",
 				"title": "New Angular service..."
 			}
 		],
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "kx-vscode-angular-extension.createAngularComponent",
-					"group": "kx-vscode-angular-extension"
+					"command": "kx-vscode-angular-extension:angular:component",
+					"group": "kx-vscode-angular-extension:angular@1",
+					"when": "config.kx-vscode-angular-extension.component.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension.createAngularService",
-					"group": "kx-vscode-angular-extension"
+					"command": "kx-vscode-angular-extension:angular:directive",
+					"group": "kx-vscode-angular-extension:angular@2",
+					"when": "config.kx-vscode-angular-extension.directive.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension.createAngularModule",
-					"group": "kx-vscode-angular-extension"
+					"command": "kx-vscode-angular-extension:angular:module",
+					"group": "kx-vscode-angular-extension:angular@3",
+					"when": "config.kx-vscode-angular-extension.module.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension.createAngularDirective",
-					"group": "kx-vscode-angular-extension"
+					"command": "kx-vscode-angular-extension:angular:pipe",
+					"group": "kx-vscode-angular-extension:angular@4",
+					"when": "config.kx-vscode-angular-extension.pipe.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension.createAngularPipe",
-					"group": "kx-vscode-angular-extension"
+					"command": "kx-vscode-angular-extension:angular:service",
+					"group": "kx-vscode-angular-extension:angular@5",
+					"when": "config.kx-vscode-angular-extension.service.showInContextMenu"
 				}
 			]
 		}

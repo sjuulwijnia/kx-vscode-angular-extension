@@ -9,7 +9,7 @@ export abstract class Creator {
 		private readonly context: vscode.ExtensionContext
 	) {
 		const commandWatcher = vscode.commands
-			.registerCommand(`kx-vscode-angular-extension.${command}`, uri => {
+			.registerCommand(`kx-vscode-angular-extension:${command}`, uri => {
 				this.create(uri);
 			});
 

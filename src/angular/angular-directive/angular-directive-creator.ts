@@ -28,8 +28,6 @@ export class AngularDirectiveCreator extends AngularCreator<DirectiveConfigurati
 			angularType: 'directive',
 			angularModuleType: 'declarations',
 
-			command: 'createAngularDirective',
-
 			selectorPrompt: 'Enter directive selector...',
 			selectorPromptAppendPrefix: 'short'
 		});

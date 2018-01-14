@@ -68,7 +68,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		protected readonly angularCreatorInjects: AngularCreatorInjects,
 		private readonly angularCreatorSettings: AngularCreatorSettings
 	) {
-		super(angularCreatorSettings.command, angularCreatorInjects.context);
+		super(`angular:${angularCreatorSettings.angularType.toLowerCase()}`, angularCreatorInjects.context);
 
 		angularCreatorInjects.angularConfigurationWatcher.subscribe(() => {
 			if (!!this.angularConfiguration) {

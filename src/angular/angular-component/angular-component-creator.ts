@@ -32,8 +32,6 @@ export class AngularComponentCreator extends AngularCreator<ComponentConfigurati
 			angularType: 'component',
 			angularModuleType: 'declarations',
 
-			command: 'createAngularComponent',
-
 			selectorPrompt: 'Enter component selector...',
 			selectorPromptAppendPrefix: true
 		});

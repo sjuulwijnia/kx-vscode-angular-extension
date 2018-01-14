@@ -28,8 +28,6 @@ export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
 			angularType: 'pipe',
 			angularModuleType: 'declarations',
 
-			command: 'createAngularPipe',
-
 			selectorPrompt: 'Enter pipe name...',
 			selectorPromptAppendPrefix: false
 		});

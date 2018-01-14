@@ -10,8 +10,6 @@ export interface AngularCreatorSettings {
 	angularType: string;
 	angularModuleType: AngularCreatorSettingsAngularModuleType;
 
-	command: string;
-
 	selectorPrompt: string;
 	selectorPromptAppendPrefix: AngularCreatorSettingsAppendPrefixType;
 }

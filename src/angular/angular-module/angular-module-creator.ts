@@ -31,8 +31,6 @@ export class AngularModuleCreator extends AngularCreator<ModuleConfiguration> {
 			angularType: 'module',
 			angularModuleType: 'imports',
 
-			command: 'createAngularModule',
-
 			selectorPrompt: 'Enter module class name...',
 			selectorPromptAppendPrefix: false
 		});
