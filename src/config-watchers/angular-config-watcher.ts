@@ -1,14 +1,17 @@
 'use strict';
+import * as vscode from 'vscode';
+
 import { BaseConfigWatcher } from './base-config-watcher';
 
 export class AngularConfigurationWatcher extends BaseConfigWatcher<AngularCliConfiguration> {
-	private static _instance: AngularConfigurationWatcher = new AngularConfigurationWatcher();
-	public static get instance(): AngularConfigurationWatcher {
-		return AngularConfigurationWatcher._instance;
-	}
+	private static instance: AngularConfigurationWatcher = new AngularConfigurationWatcher();
 
 	private constructor() {
 		super('.angular-cli.json');
+	}
+
+	public static initialize(context: vscode.ExtensionContext) {
+		return AngularConfigurationWatcher.instance.initialize(context);
 	}
 
 	protected triggerConfigurationUpdate(angularConfigurationJson: string) {

@@ -7,6 +7,7 @@ A Visual Studio Code extension that adds several context-menu options in the sid
 Added context-menu options:
 * _New Angular Component_: adds a new Angular component to the selected folder using the specified selector.
 * _New Angular Directive_: adds a new Angular directive to the selected folder using the specified selector.
+* _New Angular Module_: adds a new Angular module to the selected folder using the specified name.
 * _New Angular Pipe_: adds a new Angular pipe to the selected folder using the specified name.
 * _New Angular Service_: adds a new Angular service to the selected folder using the specified name.
 
@@ -22,14 +23,14 @@ During creation, you can choose to use the current configuration or to manually 
 * A **.editorconfig** is optional, but is highly recommended, as kx-vscode-angular-extension will try to adhere to the given standards as much as possible.
 
 ## Extension Settings
-* **kx-vscode-angular-extension.addToNgModule**: When true, the created option will be added to the nearest NgModule it can find.
-* **kx-vscode-angular-extension.containerBarrelFile**: When true, it will create a barrel file (index.ts) when a container directory is used. Defaults to true.
-* **kx-vscode-angular-extension.containerSuffix**: When true, the container component will also be suffixed (e.g.: 'dashboard-item.component'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false.
-* **kx-vscode-angular-extension.openCreatedFile**: When true, it will automagically open the created files. Defaults to true.
+The extension has multiple ways to be configured:
+* By editing the **.angular-cli.json** file, you can edit the defaults that will also be used by the **ng generate ...** command.
+* By editing the **.vscode/settings.json** file, you can edit the extension defaults that allow for advanced options.
+	* Each context-menu option has its own configuration.
 
 ## Known Issues
 
-..nothing? Or, you know.. missing Module creation, Guard creation.. that kind of stuff!
+Misses a bunch of **ng generate...** command options.
 
 ## Release Notes
 
@@ -37,5 +38,6 @@ None so far!
 
 ## Up next
 
-* Generalize replacing CLASS_REPLACE etc. in the templates.
+* Add the missing **ng generate...** options.
+* Instead of blacklisting characters in the selector input, whitelist the characters that *are* allowed.
 * Add some unit tests to guarantee functionality won't break.

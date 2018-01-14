@@ -1,5 +1,11 @@
 'use strict';
 
+export enum AngularSelectorInvalidEnum {
+	OK = 0,
+	ERROR_STARTS_WITH_NUMBER = 10,
+	ERROR_INVALID_CHARACTERS
+}
+
 export class AngularSelector {
 	public get clazz(): string {
 		const clazz = this.pipe;
@@ -69,18 +75,30 @@ export class AngularSelector {
 
 	private readonly inputValidated: string = null;
 
-	public get inputInvalid() {
-		return this.inputValidated !== this.inputValidated;
+	public get inputInvalid(): AngularSelectorInvalidEnum {
+		if (/^\d/gmi.test(this.clazz)) {
+			return AngularSelectorInvalidEnum.ERROR_STARTS_WITH_NUMBER;
+		}
+
+		if (this.inputValidated !== this.input) {
+			return AngularSelectorInvalidEnum.ERROR_INVALID_CHARACTERS;
+		}
+
+		return AngularSelectorInvalidEnum.OK;
 	}
 
 	constructor(
-		private readonly input: string,
+		public readonly input: string,
 		private readonly prefix: string = '',
 		private readonly suffix: string = ''
 	) {
 		this.inputValidated = input
-			.split(/[\<\>\:\"\/\\\|\?\*\.\_]/gmi)
+			.split(/[\<\>\:\;\'\"\/\\\|\?\*\.\_\[\]\{\}\(\)]/gmi)
 			.join('-');
+	}
+
+	public toNewOption(newSuffix: string): AngularSelector {
+		return new AngularSelector(this.input, this.prefix, newSuffix);
 	}
 
 	private capitalize(input: string): string {

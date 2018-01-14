@@ -4,13 +4,14 @@ import * as vscode from 'vscode';
 import { BaseConfigWatcher } from './base-config-watcher';
 
 export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<ExtensionConfiguration> {
-	private static _instance: VisualStudioCodeConfigurationWatcher = new VisualStudioCodeConfigurationWatcher();
-	public static get instance(): VisualStudioCodeConfigurationWatcher {
-		return VisualStudioCodeConfigurationWatcher._instance;
-	}
+	private static instance: VisualStudioCodeConfigurationWatcher = new VisualStudioCodeConfigurationWatcher();
 
 	private constructor() {
 		super('.vscode/settings.json');
+	}
+
+	public static initialize(context: vscode.ExtensionContext) {
+		return VisualStudioCodeConfigurationWatcher.instance.initialize(context);
 	}
 
 	protected triggerConfigurationUpdate(vscodeConfigurationJson: string) {
@@ -64,7 +65,8 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 			extensionConfiguration.module = extensionConfiguration.module || {
 				addToModule: false,
 				containerBarrelFile: false,
-				containerSuffix: false
+				containerSuffix: false,
+				createModuleComponent: true
 			};
 			extensionConfiguration.pipe = extensionConfiguration.pipe || {
 				addToModule: true,
@@ -119,7 +121,7 @@ export interface ExtensionDirectiveConfiguration extends ExtensionDefaultOptionC
 
 }
 export interface ExtensionModuleConfiguration extends ExtensionDefaultOptionConfiguration {
-
+	createModuleComponent?: boolean;
 }
 export interface ExtensionPipeConfiguration extends ExtensionDefaultOptionConfiguration {
 

@@ -1,5 +1,6 @@
 'use strict';
 import * as ec from 'editorconfig-parser';
+import * as vscode from 'vscode';
 
 import { BaseConfigWatcher } from './base-config-watcher';
 
@@ -12,13 +13,14 @@ export class EditorConfigurationWatcher extends BaseConfigWatcher<EditorConfigur
 		return ' '.repeat(+this.currentConfiguration.indent_size);
 	}
 
-	private static _instance: EditorConfigurationWatcher = new EditorConfigurationWatcher();
-	public static get instance(): EditorConfigurationWatcher {
-		return EditorConfigurationWatcher._instance;
-	}
+	private static instance: EditorConfigurationWatcher = new EditorConfigurationWatcher();
 
 	private constructor() {
 		super('.editorconfig');
+	}
+
+	public static initialize(context: vscode.ExtensionContext) {
+		return EditorConfigurationWatcher.instance.initialize(context);
 	}
 
 	public makeCompliant(data: string): string {

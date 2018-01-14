@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 
 import {
-
 	AngularConfigurationWatcher,
 	EditorConfigurationWatcher,
 	VisualStudioCodeConfigurationWatcher,
@@ -16,7 +15,10 @@ import {
 	ExtensionDefaultOptionConfiguration
 } from './config-watchers';
 
-import { AngularSelector } from './angular-selector';
+import {
+	AngularSelector,
+	AngularSelectorInvalidEnum
+} from './angular-selector';
 import * as fileUtil from './file-util';
 
 import {
@@ -66,7 +68,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	) {
 		const commandWatcher = vscode.commands
 			.registerCommand(`kx-vscode-angular-extension.${angularCreatorSettings.command}`, uri => {
-				this.onCommandTriggered(uri)
+				this.create(uri);
 			});
 
 		angularCreatorInjects.angularConfigurationWatcher.subscribe(() => {
@@ -167,7 +169,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		});
 	}
 
-	private async onCommandTriggered(uri: vscode.Uri) {
+	public async create(uri: vscode.Uri, selectorFromOutside?: string) {
 		// just to be safe
 		this.onConfigurationUpdated();
 
@@ -187,12 +189,23 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		}
 
 		// get component selector
-		const selectorFromPrompt = await this.prompt(this.angularCreatorSettings.selectorPrompt, prefix);
+		const selectorFromPrompt = selectorFromOutside || await this.prompt(this.angularCreatorSettings.selectorPrompt, prefix);
 		if (!selectorFromPrompt) {
 			return;
 		}
 
 		const selector = new AngularSelector(selectorFromPrompt, this.angularApp.prefix, this.angularCreatorSettings.angularType);
+		switch (selector.inputInvalid) {
+			case AngularSelectorInvalidEnum.OK: break;
+
+			case AngularSelectorInvalidEnum.ERROR_INVALID_CHARACTERS:
+				vscode.window.showErrorMessage(`Invalid selector entered: '${selector.input}'; make sure it contains valid characters.`);
+				return;
+
+			case AngularSelectorInvalidEnum.ERROR_STARTS_WITH_NUMBER:
+				vscode.window.showErrorMessage(`Invalid selector entered: '${selector.input}'; make sure it doesn't start with a number.`);
+				return;
+		}
 
 		// determine configuration style
 		let configuration: CONFIGURATION = Object.assign({}, this.configuration);
@@ -252,7 +265,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		const filePath = await this.createFiles(configuration, directory, selector);
 
 		// open file if configured
-		if (this.extensionConfiguration.global.openCreatedFile) {
+		if (!selectorFromOutside && this.extensionConfiguration.global.openCreatedFile) {
 			this.openFileInWindow(filePath);
 		}
 

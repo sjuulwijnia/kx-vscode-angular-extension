@@ -18,18 +18,14 @@ import {
 export function activate(context: vscode.ExtensionContext) {
 	const injects: AngularCreatorInjects = {
 		context,
-		angularConfigurationWatcher: AngularConfigurationWatcher.instance,
-		editorConfigurationWatcher: EditorConfigurationWatcher.instance,
-		vscodeConfigurationWatcher: VisualStudioCodeConfigurationWatcher.instance
+		angularConfigurationWatcher: AngularConfigurationWatcher.initialize(context),
+		editorConfigurationWatcher: EditorConfigurationWatcher.initialize(context),
+		vscodeConfigurationWatcher: VisualStudioCodeConfigurationWatcher.initialize(context)
 	};
-
-	injects.angularConfigurationWatcher.initialize(context);
-	injects.editorConfigurationWatcher.initialize(context);
-	injects.vscodeConfigurationWatcher.initialize(context);
 
 	const angularComponentCreator = new AngularComponentCreator(injects);
 	const angularDirectiveCreator = new AngularDirectiveCreator(injects);
-	const angularModuleCreator = new AngularModuleCreator(injects);
+	const angularModuleCreator = new AngularModuleCreator(injects, angularComponentCreator);
 	const angularPipeCreator = new AngularPipeCreator(injects);
 	const angularServiceCreator = new AngularServiceCreator(injects);
 }

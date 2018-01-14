@@ -1,47 +1,35 @@
 {
 	"name": "kx-vscode-angular-extension",
 	"displayName": "kx-vscode-angular-extension",
-	"description": "",
+	"description": "An extension that adds several context-menu options in the sidebar when an Angular CLI project is detected.",
 	"version": "0.0.1",
 	"publisher": "sjuulwijnia",
+	"preview": true,
+	"galleryBanner": {
+		"color": "#002b36",
+		"theme": "dark"
+	},
 	"engines": {
 		"vscode": "^1.18.0"
 	},
 	"categories": [
+		"Snippets",
 		"Other"
 	],
+	"license": "LICENSE.md",
+	"bugs": {
+		"url": "https://github.com/sjuulwijnia/kx-vscode-angular-extension/issues",
+		"email": "sjuulwijnia@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sjuulwijnia/kx-vscode-angular-extension"
+	},
 	"activationEvents": [
 		"workspaceContains:**/.angular-cli.json"
 	],
 	"main": "./out/extension",
 	"contributes": {
-		"commands": [
-			{
-				"command": "kx-vscode-angular-extension.createAngularComponent",
-				"category": "kx-vscode-angular-extension",
-				"title": "New Angular component..."
-			},
-			{
-				"command": "kx-vscode-angular-extension.createAngularDirective",
-				"category": "kx-vscode-angular-extension",
-				"title": "New Angular directive..."
-			},
-			{
-				"command": "kx-vscode-angular-extension.createAngularModule",
-				"category": "kx-vscode-angular-extension",
-				"title": "New Angular module..."
-			},
-			{
-				"command": "kx-vscode-angular-extension.createAngularPipe",
-				"category": "kx-vscode-angular-extension",
-				"title": "New Angular pipe..."
-			},
-			{
-				"command": "kx-vscode-angular-extension.createAngularService",
-				"category": "kx-vscode-angular-extension",
-				"title": "New Angular service..."
-			}
-		],
 		"configuration": [
 			{
 				"type": "object",
@@ -66,7 +54,8 @@
 							"module": {
 								"addToModule": true,
 								"containerBarrelFile": false,
-								"containerSuffix": false
+								"containerSuffix": false,
+								"createDefaultComponent": true
 							},
 							"pipe": {
 								"addToModule": true,
@@ -144,6 +133,11 @@
 										"type": "boolean",
 										"default": false,
 										"description": "When true, the container directory will also be suffixed (e.g.: 'dashboard-item.directive'), when false, it will not be suffixed (e.g.: 'dashboard-item'). Defaults to false."
+									},
+									"createDefaultComponent": {
+										"type": "boolean",
+										"default": true,
+										"description": "When true, upon module creation a component will also be created for that module. Defaults to true."
 									}
 								}
 							},
@@ -257,6 +251,33 @@
 				}
 			}
 		},
+		"commands": [
+			{
+				"command": "kx-vscode-angular-extension.createAngularComponent",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular component..."
+			},
+			{
+				"command": "kx-vscode-angular-extension.createAngularDirective",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular directive..."
+			},
+			{
+				"command": "kx-vscode-angular-extension.createAngularModule",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular module..."
+			},
+			{
+				"command": "kx-vscode-angular-extension.createAngularPipe",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular pipe..."
+			},
+			{
+				"command": "kx-vscode-angular-extension.createAngularService",
+				"category": "kx-vscode-angular-extension",
+				"title": "New Angular service..."
+			}
+		],
 		"menus": {
 			"explorer/context": [
 				{

@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 
 export type BaseConfigurationCallback<CONFIGURATION> = (configuration: CONFIGURATION) => void;
 export abstract class BaseConfigWatcher<CONFIGURATION> {
+	private initialized = false;
+
 	private callbacks: BaseConfigurationCallback<CONFIGURATION>[] = [];
 	private _currentConfiguration: CONFIGURATION = null;
 
@@ -18,7 +20,13 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 	protected abstract triggerConfigurationUpdate(rawContents: string);
 	protected abstract triggerConfigurationDelete();
 
-	public initialize(context: vscode.ExtensionContext) {
+	protected initialize(context: vscode.ExtensionContext): this {
+		if (this.initialized) {
+			return this;
+		}
+
+		this.initialized = true;
+
 		const fileWatcher = vscode.workspace.createFileSystemWatcher(`**/${this.filename}`, false, false, false);
 
 		context.subscriptions.push(fileWatcher.onDidCreate(() => this.innerTriggerConfigurationUpdate()));
@@ -27,6 +35,8 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 		context.subscriptions.push(fileWatcher);
 
 		this.innerTriggerConfigurationUpdate();
+
+		return this;
 	}
 
 	public subscribe(callback: BaseConfigurationCallback<CONFIGURATION>) {
