@@ -16,7 +16,7 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 
 	protected triggerConfigurationUpdate(vscodeConfigurationJson: string) {
 		const vscodeConfiguration = JSON.parse(vscodeConfigurationJson) as VSCodeConfiguration;
-		let extensionConfiguration = vscodeConfiguration['kx-vscode-angular-extension'];
+		let extensionConfiguration = vscodeConfiguration['kx-vscode-angular-context-creator'];
 		if (!extensionConfiguration) {
 			extensionConfiguration = <ExtensionConfiguration>{
 				global: {
@@ -99,7 +99,7 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 }
 
 export interface VSCodeConfiguration {
-	"kx-vscode-angular-extension": ExtensionConfiguration;
+	"kx-vscode-angular-context-creator": ExtensionConfiguration;
 }
 
 export interface ExtensionConfiguration {

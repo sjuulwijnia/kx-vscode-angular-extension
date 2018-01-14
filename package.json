@@ -1,5 +1,5 @@
 {
-	"name": "kx-vscode-angular-extension",
+	"name": "kx-vscode-angular-context-creator",
 	"displayName": "Angular Context Creator",
 	"description": "Adds Angular related context menu options to Visual Studio Code's explorer view when an Angular CLI project is detected.",
 	"version": "0.1.0",
@@ -35,7 +35,7 @@
 				"type": "object",
 				"title": "Visual Studio Code Angular Extension",
 				"properties": {
-					"kx-vscode-angular-extension": {
+					"kx-vscode-angular-context-creator": {
 						"type": "object",
 						"default": {
 							"global": {
@@ -80,7 +80,7 @@
 								"showInterfaceInContextMenu": false
 							}
 						},
-						"description": "Contains the configuration for the kx-vscode-angular-extension. This configuration extends the @angular/cli configuration and allows for advanced options.",
+						"description": "Contains the configuration for the kx-vscode-angular-context-creator. This configuration extends the @angular/cli configuration and allows for advanced options.",
 						"properties": {
 							"global": {
 								"type": "object",
@@ -333,7 +333,7 @@
 			}
 		],
 		"configurationDefaults": {
-			"kx-vscode-angular-extension": {
+			"kx-vscode-angular-context-creator": {
 				"global": {
 					"openCreatedFile": true
 				},
@@ -374,87 +374,87 @@
 		},
 		"commands": [
 			{
-				"command": "kx-vscode-angular-extension:angular:component",
-				"category": "kx-vscode-angular-extension:angular",
+				"command": "kx-vscode-angular-context-creator:angular:component",
+				"category": "kx-vscode-angular-context-creator:angular",
 				"title": "New Angular component..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:angular:directive",
-				"category": "kx-vscode-angular-extension:angular",
+				"command": "kx-vscode-angular-context-creator:angular:directive",
+				"category": "kx-vscode-angular-context-creator:angular",
 				"title": "New Angular directive..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:angular:module",
-				"category": "kx-vscode-angular-extension:angular",
+				"command": "kx-vscode-angular-context-creator:angular:module",
+				"category": "kx-vscode-angular-context-creator:angular",
 				"title": "New Angular module..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:angular:pipe",
-				"category": "kx-vscode-angular-extension:angular",
+				"command": "kx-vscode-angular-context-creator:angular:pipe",
+				"category": "kx-vscode-angular-context-creator:angular",
 				"title": "New Angular pipe..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:angular:service",
-				"category": "kx-vscode-angular-extension:angular",
+				"command": "kx-vscode-angular-context-creator:angular:service",
+				"category": "kx-vscode-angular-context-creator:angular",
 				"title": "New Angular service..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:typescript:class",
-				"category": "kx-vscode-angular-extension:typescript",
+				"command": "kx-vscode-angular-context-creator:typescript:class",
+				"category": "kx-vscode-angular-context-creator:typescript",
 				"title": "New Typescript class..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:typescript:enum",
-				"category": "kx-vscode-angular-extension:typescript",
+				"command": "kx-vscode-angular-context-creator:typescript:enum",
+				"category": "kx-vscode-angular-context-creator:typescript",
 				"title": "New Typescript enum..."
 			},
 			{
-				"command": "kx-vscode-angular-extension:typescript:interface",
-				"category": "kx-vscode-angular-extension:typescript",
+				"command": "kx-vscode-angular-context-creator:typescript:interface",
+				"category": "kx-vscode-angular-context-creator:typescript",
 				"title": "New Typescript interface..."
 			}
 		],
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "kx-vscode-angular-extension:angular:component",
-					"group": "kx-vscode-angular-extension:angular@1",
-					"when": "config.kx-vscode-angular-extension.angular.component.showInContextMenu"
+					"command": "kx-vscode-angular-context-creator:angular:component",
+					"group": "kx-vscode-angular-context-creator:angular@1",
+					"when": "config.kx-vscode-angular-context-creator.angular.component.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:angular:directive",
-					"group": "kx-vscode-angular-extension:angular@2",
-					"when": "config.kx-vscode-angular-extension.angular.directive.showInContextMenu"
+					"command": "kx-vscode-angular-context-creator:angular:directive",
+					"group": "kx-vscode-angular-context-creator:angular@2",
+					"when": "config.kx-vscode-angular-context-creator.angular.directive.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:angular:module",
-					"group": "kx-vscode-angular-extension:angular@3",
-					"when": "config.kx-vscode-angular-extension.angular.module.showInContextMenu"
+					"command": "kx-vscode-angular-context-creator:angular:module",
+					"group": "kx-vscode-angular-context-creator:angular@3",
+					"when": "config.kx-vscode-angular-context-creator.angular.module.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:angular:pipe",
-					"group": "kx-vscode-angular-extension:angular@4",
-					"when": "config.kx-vscode-angular-extension.angular.pipe.showInContextMenu"
+					"command": "kx-vscode-angular-context-creator:angular:pipe",
+					"group": "kx-vscode-angular-context-creator:angular@4",
+					"when": "config.kx-vscode-angular-context-creator.angular.pipe.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:angular:service",
-					"group": "kx-vscode-angular-extension:angular@5",
-					"when": "config.kx-vscode-angular-extension.angular.service.showInContextMenu"
+					"command": "kx-vscode-angular-context-creator:angular:service",
+					"group": "kx-vscode-angular-context-creator:angular@5",
+					"when": "config.kx-vscode-angular-context-creator.angular.service.showInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:typescript:class",
-					"group": "kx-vscode-angular-extension:typescript@1",
-					"when": "config.kx-vscode-angular-extension.typescript.showClassInContextMenu"
+					"command": "kx-vscode-angular-context-creator:typescript:class",
+					"group": "kx-vscode-angular-context-creator:typescript@1",
+					"when": "config.kx-vscode-angular-context-creator.typescript.showClassInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:typescript:enum",
-					"group": "kx-vscode-angular-extension:typescript@2",
-					"when": "config.kx-vscode-angular-extension.typescript.showEnumInContextMenu"
+					"command": "kx-vscode-angular-context-creator:typescript:enum",
+					"group": "kx-vscode-angular-context-creator:typescript@2",
+					"when": "config.kx-vscode-angular-context-creator.typescript.showEnumInContextMenu"
 				},
 				{
-					"command": "kx-vscode-angular-extension:typescript:interface",
-					"group": "kx-vscode-angular-extension:typescript@3",
-					"when": "config.kx-vscode-angular-extension.typescript.showInterfaceInContextMenu"
+					"command": "kx-vscode-angular-context-creator:typescript:interface",
+					"group": "kx-vscode-angular-context-creator:typescript@3",
+					"when": "config.kx-vscode-angular-context-creator.typescript.showInterfaceInContextMenu"
 				}
 			]
 		}

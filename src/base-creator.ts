@@ -24,7 +24,7 @@ export abstract class BaseCreator {
 		private readonly baseCreatorInjects: BaseCreatorInjects
 	) {
 		const commandWatcher = vscode.commands
-			.registerCommand(`kx-vscode-angular-extension:${command}`, uri => {
+			.registerCommand(`kx-vscode-angular-context-creator:${command}`, uri => {
 				this.create(uri);
 			});
 
