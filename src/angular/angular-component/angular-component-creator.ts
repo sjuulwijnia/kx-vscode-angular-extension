@@ -5,8 +5,7 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../../file-util';
 
-import { AngularCreatorInjects } from '../angular-creator-models';
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -45,13 +44,12 @@ export class AngularComponentCreator extends AngularCreator<ComponentConfigurati
 			inlineTemplate: false,
 			spec: true,
 			viewEncapsulation: 'Emulated',
+			...this.angularConfiguration.defaults.component,
 
 			addToModule: true,
 			containerBarrelFile: false,
 			containerSuffix: false,
-
-			...this.angularConfiguration.defaults.component,
-			...this.extensionConfiguration.component
+			...this.vscodeExtensionConfiguration.angular.component
 		};
 	}
 

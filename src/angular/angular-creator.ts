@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import { Creator } from '../creator';
+import { BaseCreator, BaseCreatorInjects } from '../base-creator';
 
 import {
 	AngularConfigurationWatcher,
@@ -17,29 +17,20 @@ import {
 	ExtensionDefaultOptionConfiguration
 } from '../config-watchers';
 
-import {
-	AngularSelector,
-	AngularSelectorInvalidEnum
-} from './angular-selector';
+import { BaseSelectorInvalidEnum } from '../base-selector';
+import { AngularSelector } from './angular-selector';
 import * as fileUtil from '../file-util';
 
 import {
-	AngularCreatorInjects,
-	AngularCreatorSettings,
-	AngularCreatorSettingsAngularModuleType,
-	AngularCreatorSettingsAppendPrefixType
-} from './angular-creator-models';
-import { addToNearestNgModule } from './angular-creator-module-finder';
+	addToNearestNgModule,
+	AngularCreatorSettingsAngularModuleType
+} from './angular-creator-module-finder';
 
-export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsItemConfiguration & ExtensionDefaultOptionConfiguration> extends Creator {
+export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsItemConfiguration & ExtensionDefaultOptionConfiguration> extends BaseCreator {
 	protected configuration: CONFIGURATION = null;
 
 	protected get angularConfiguration(): AngularCliConfiguration {
 		return this.angularCreatorInjects.angularConfigurationWatcher.currentConfiguration;
-	}
-
-	protected get extensionConfiguration(): ExtensionConfiguration {
-		return this.angularCreatorInjects.vscodeConfigurationWatcher.currentConfiguration;
 	}
 
 	protected get angularApp(): AngularCliAppConfiguration {
@@ -68,7 +59,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		protected readonly angularCreatorInjects: AngularCreatorInjects,
 		private readonly angularCreatorSettings: AngularCreatorSettings
 	) {
-		super(`angular:${angularCreatorSettings.angularType.toLowerCase()}`, angularCreatorInjects.context);
+		super(`angular:${angularCreatorSettings.angularType.toLowerCase()}`, angularCreatorInjects);
 
 		angularCreatorInjects.angularConfigurationWatcher.subscribe(() => {
 			if (!!this.angularConfiguration) {
@@ -77,16 +68,11 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		});
 
 		angularCreatorInjects.vscodeConfigurationWatcher.subscribe(() => {
-			if (!!this.extensionConfiguration) {
+			if (!!this.vscodeExtensionConfiguration) {
 				this.onConfigurationUpdated();
 			}
 		});
 	}
-
-	/**
-	 * When the Angular CLI configuration or Visual Studio Code configuration is updated, this function is called to update the preconfigured options for this option.
-	 */
-	protected abstract onConfigurationUpdated();
 
 	/**
 	 * When the option is used to create a manual configuration, this function is called. Should return a configuration.
@@ -101,18 +87,6 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 	 * @returns Path to the created file.
 	 */
 	protected async abstract createFiles(configuration: CONFIGURATION, directory: string, selector: AngularSelector): Promise<string>;
-
-	/**
-	 * Opens the file at @path in the current workspace.
-	 * @param path Path to the file that needs to be opened.
-	 */
-	protected openFileInWindow(path: string) {
-		vscode.workspace
-			.openTextDocument(path)
-			.then(document => {
-				vscode.window.showTextDocument(document);
-			});
-	}
 
 	public async create(uri: vscode.Uri, selectorFromOutside?: string) {
 		// just to be safe
@@ -133,7 +107,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 				break;
 		}
 
-		// get component selector
+		// get component selector or reuse existing one from the outside (usually when a module is created)
 		const selectorFromPrompt = selectorFromOutside || await this.prompt(this.angularCreatorSettings.selectorPrompt, prefix);
 		if (!selectorFromPrompt) {
 			return;
@@ -141,13 +115,13 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 
 		const selector = new AngularSelector(selectorFromPrompt, this.angularApp.prefix, this.angularCreatorSettings.angularType);
 		switch (selector.inputInvalid) {
-			case AngularSelectorInvalidEnum.OK: break;
+			case BaseSelectorInvalidEnum.OK: break;
 
-			case AngularSelectorInvalidEnum.ERROR_INVALID_CHARACTERS:
+			case BaseSelectorInvalidEnum.ERROR_INVALID_CHARACTERS:
 				vscode.window.showErrorMessage(`Invalid selector entered: '${selector.input}'; make sure it contains valid characters.`);
 				return;
 
-			case AngularSelectorInvalidEnum.ERROR_STARTS_WITH_NUMBER:
+			case BaseSelectorInvalidEnum.ERROR_STARTS_WITH_NUMBER:
 				vscode.window.showErrorMessage(`Invalid selector entered: '${selector.input}'; make sure it doesn't start with a number.`);
 				return;
 		}
@@ -210,7 +184,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		const filePath = await this.createFiles(configuration, directory, selector);
 
 		// open file if configured
-		if (!selectorFromOutside && this.extensionConfiguration.global.openCreatedFile) {
+		if (!selectorFromOutside && this.vscodeExtensionConfiguration.global.openCreatedFile) {
 			this.openFileInWindow(filePath);
 		}
 
@@ -230,6 +204,20 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		}
 	}
 }
+
+export interface AngularCreatorInjects extends BaseCreatorInjects {
+	angularConfigurationWatcher: AngularConfigurationWatcher;
+}
+
+export interface AngularCreatorSettings {
+	angularType: string;
+	angularModuleType: AngularCreatorSettingsAngularModuleType;
+
+	selectorPrompt: string;
+	selectorPromptAppendPrefix: AngularCreatorSettingsAppendPrefixType;
+}
+
+export type AngularCreatorSettingsAppendPrefixType = true | false | 'short';
 
 export interface ExtensionConfiguration {
 	containerBarrelFile: boolean;

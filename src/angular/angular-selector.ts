@@ -1,19 +1,10 @@
 'use strict';
 
-export enum AngularSelectorInvalidEnum {
-	OK = 0,
-	ERROR_STARTS_WITH_NUMBER = 10,
-	ERROR_INVALID_CHARACTERS
-}
+import { BaseSelector } from '../base-selector';
 
-export class AngularSelector {
+export class AngularSelector extends BaseSelector {
 	public get clazz(): string {
-		const clazz = this.pipe;
-		if (!clazz) {
-			return '';
-		}
-
-		return `${this.capitalize(clazz)}${this.capitalize(this.suffix)}`;
+		return `${this.capitalize(this.getClass())}${this.capitalize(this.suffix)}`;
 	}
 
 	public get component(): string {
@@ -21,12 +12,7 @@ export class AngularSelector {
 			return '';
 		}
 
-		let selector = this.inputValidated
-			.split(/(?=[A-Z])/)
-			.join('-')
-			.replace(/ /, '-')
-			.toLowerCase();
-
+		let selector = this.getHyphenated();
 		let prefixIndex = selector.indexOf(`${this.prefix.toLowerCase()}-`);
 		if (prefixIndex === 0) {
 			selector = selector.substring(this.prefix.length + 1);
@@ -53,67 +39,18 @@ export class AngularSelector {
 	}
 
 	public get pipe(): string {
-		if (!this.inputValidated) {
-			return '';
-		}
-
-		let pipe = this.inputValidated
-			.split('-')
-			.map(s => this.capitalize(s))
-			.join('')
-			.split(' ')
-			.map(s => this.capitalize(s))
-			.join('');
-
-		const prefixIndex = pipe.indexOf(`${this.capitalize(this.prefix)}`);
-		if (prefixIndex === 0) {
-			pipe = pipe.substring(this.prefix.length);
-		}
-
-		return this.decapitalize(pipe);
-	}
-
-	private readonly inputValidated: string = null;
-
-	public get inputInvalid(): AngularSelectorInvalidEnum {
-		if (/^\d/gmi.test(this.clazz)) {
-			return AngularSelectorInvalidEnum.ERROR_STARTS_WITH_NUMBER;
-		}
-
-		if (this.inputValidated !== this.input) {
-			return AngularSelectorInvalidEnum.ERROR_INVALID_CHARACTERS;
-		}
-
-		return AngularSelectorInvalidEnum.OK;
+		return this.decapitalize(this.getClass());
 	}
 
 	constructor(
-		public readonly input: string,
-		private readonly prefix: string = '',
-		private readonly suffix: string = ''
+		input: string,
+		prefix: string = '',
+		suffix: string = ''
 	) {
-		this.inputValidated = input
-			.split(/[\<\>\:\;\'\"\/\\\|\?\*\.\_\[\]\{\}\(\)]/gmi)
-			.join('-');
+		super(input, prefix, suffix);
 	}
 
 	public toNewOption(newSuffix: string): AngularSelector {
 		return new AngularSelector(this.input, this.prefix, newSuffix);
-	}
-
-	private capitalize(input: string): string {
-		if (!input) {
-			return '';
-		}
-
-		return input.charAt(0).toUpperCase() + input.slice(1);
-	}
-
-	private decapitalize(input: string): string {
-		if (!input) {
-			return '';
-		}
-
-		return input.charAt(0).toLowerCase() + input.slice(1);
 	}
 }

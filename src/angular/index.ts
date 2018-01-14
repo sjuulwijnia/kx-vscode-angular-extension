@@ -6,4 +6,4 @@ export * from './angular-service';
 
 export {
 	AngularCreatorInjects
-} from './angular-creator-models';
+} from './angular-creator';

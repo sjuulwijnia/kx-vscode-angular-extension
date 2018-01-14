@@ -5,8 +5,7 @@ import * as vscode from 'vscode';
 
 import * as fileUtil from '../../file-util';
 
-import { AngularCreatorInjects } from '../angular-creator-models';
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -43,7 +42,7 @@ export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
 			containerSuffix: false,
 
 			...this.angularConfiguration.defaults.pipe,
-			...this.extensionConfiguration.pipe
+			...this.vscodeExtensionConfiguration.angular.pipe
 		};
 	}
 

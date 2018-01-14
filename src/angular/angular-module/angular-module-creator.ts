@@ -6,8 +6,7 @@ import * as vscode from 'vscode';
 import * as fileUtil from '../../file-util';
 
 import { AngularComponentCreator, ComponentConfiguration } from '../angular-component';
-import { AngularCreatorInjects } from '../angular-creator-models';
-import { AngularCreator } from '../angular-creator';
+import { AngularCreator, AngularCreatorInjects } from '../angular-creator';
 import { AngularSelector } from '../angular-selector';
 
 import {
@@ -46,7 +45,7 @@ export class AngularModuleCreator extends AngularCreator<ModuleConfiguration> {
 			containerSuffix: false,
 
 			...this.angularConfiguration.defaults.module,
-			...this.extensionConfiguration.module
+			...this.vscodeExtensionConfiguration.angular.module
 		};
 	}
 

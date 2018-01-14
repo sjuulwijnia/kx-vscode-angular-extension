@@ -3,20 +3,63 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-export abstract class Creator {
+import {
+	ExtensionConfiguration,
+
+	EditorConfigurationWatcher,
+	VisualStudioCodeConfigurationWatcher
+} from './config-watchers';
+
+export abstract class BaseCreator {
+	protected get context() {
+		return this.baseCreatorInjects.context;
+	}
+
+	protected get vscodeExtensionConfiguration(): ExtensionConfiguration {
+		return this.baseCreatorInjects.vscodeConfigurationWatcher.currentConfiguration;
+	}
+
 	constructor(
 		private readonly command: string,
-		private readonly context: vscode.ExtensionContext
+		private readonly baseCreatorInjects: BaseCreatorInjects
 	) {
 		const commandWatcher = vscode.commands
 			.registerCommand(`kx-vscode-angular-extension:${command}`, uri => {
 				this.create(uri);
 			});
 
-		context.subscriptions.push(commandWatcher);
+		this.context.subscriptions.push(commandWatcher);
+
+		this.baseCreatorInjects.vscodeConfigurationWatcher.subscribe(() => {
+			if (!!this.vscodeExtensionConfiguration) {
+				this.onConfigurationUpdated();
+			}
+		});
 	}
 
+	/**
+	 * Called when a command is triggered.
+	 * @param uri 
+	 * @param selectorFromOutside 
+	 */
 	public abstract async create(uri: vscode.Uri, selectorFromOutside?: string);
+
+	/**
+	 * Called whenever a subscribed configuration is updated.
+	 */
+	protected abstract onConfigurationUpdated();
+
+	/**
+	 * Opens the file at @path in the current workspace.
+	 * @param path Path to the file that needs to be opened.
+	 */
+	protected openFileInWindow(path: string) {
+		vscode.workspace
+			.openTextDocument(path)
+			.then(document => {
+				vscode.window.showTextDocument(document);
+			});
+	}
 
 	/**
 	 * Prompts for a single string value.
@@ -69,6 +112,13 @@ export abstract class Creator {
 			});
 		});
 	}
+}
+
+export interface BaseCreatorInjects {
+	context: vscode.ExtensionContext;
+
+	editorConfigurationWatcher: EditorConfigurationWatcher;
+	vscodeConfigurationWatcher: VisualStudioCodeConfigurationWatcher;
 }
 
 export interface PromptListRequest<T> {

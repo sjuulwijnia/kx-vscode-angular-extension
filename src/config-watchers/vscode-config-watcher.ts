@@ -22,61 +22,69 @@ export class VisualStudioCodeConfigurationWatcher extends BaseConfigWatcher<Exte
 				global: {
 					openCreatedFile: true
 				},
-				component: {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-				directive: {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-				module: {
-					addToModule: false,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-				pipe: {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
-				},
-				service: {
-					addToModule: true,
-					containerBarrelFile: false,
-					containerSuffix: false
+				angular: {
+					component: {
+						addToModule: true,
+						containerBarrelFile: false,
+						containerSuffix: false
+					},
+					directive: {
+						addToModule: true,
+						containerBarrelFile: false,
+						containerSuffix: false
+					},
+					module: {
+						addToModule: false,
+						containerBarrelFile: false,
+						containerSuffix: false
+					},
+					pipe: {
+						addToModule: true,
+						containerBarrelFile: false,
+						containerSuffix: false
+					},
+					service: {
+						addToModule: true,
+						containerBarrelFile: false,
+						containerSuffix: false
+					}
 				}
 			}
 		} else {
 			extensionConfiguration.global = extensionConfiguration.global || {
 				openCreatedFile: true
 			};
-			extensionConfiguration.component = extensionConfiguration.component || {
-				addToModule: true,
-				containerBarrelFile: false,
-				containerSuffix: false
-			};
-			extensionConfiguration.directive = extensionConfiguration.directive || {
-				addToModule: true,
-				containerBarrelFile: false,
-				containerSuffix: false
-			};
-			extensionConfiguration.module = extensionConfiguration.module || {
-				addToModule: false,
-				containerBarrelFile: false,
-				containerSuffix: false,
-				createModuleComponent: true
-			};
-			extensionConfiguration.pipe = extensionConfiguration.pipe || {
-				addToModule: true,
-				containerBarrelFile: false,
-				containerSuffix: false
-			};
-			extensionConfiguration.service = extensionConfiguration.service || {
-				addToModule: true,
-				containerBarrelFile: false,
-				containerSuffix: false
+			extensionConfiguration.angular = extensionConfiguration.angular || {
+				component: extensionConfiguration.angular.component || {
+					addToModule: true,
+					containerBarrelFile: false,
+					containerSuffix: false
+				},
+
+				directive: extensionConfiguration.angular.directive || {
+					addToModule: true,
+					containerBarrelFile: false,
+					containerSuffix: false
+				},
+
+				module: extensionConfiguration.angular.module || {
+					addToModule: false,
+					containerBarrelFile: false,
+					containerSuffix: false,
+					createModuleComponent: true
+				},
+
+				pipe: extensionConfiguration.angular.pipe || {
+					addToModule: true,
+					containerBarrelFile: false,
+					containerSuffix: false
+				},
+
+				service: extensionConfiguration.angular.service || {
+					addToModule: true,
+					containerBarrelFile: false,
+					containerSuffix: false
+				}
 			};
 		}
 
@@ -97,15 +105,19 @@ export interface VSCodeConfiguration {
 export interface ExtensionConfiguration {
 	global: ExtensionGlobalConfiguration;
 
+	angular: ExtensionAngularConfiguration;
+}
+
+export interface ExtensionGlobalConfiguration {
+	openCreatedFile: boolean;
+}
+
+export interface ExtensionAngularConfiguration {
 	component: ExtensionComponentConfiguration;
 	directive: ExtensionDirectiveConfiguration;
 	module: ExtensionModuleConfiguration;
 	pipe: ExtensionPipeConfiguration;
 	service: ExtensionServiceConfiguration;
-}
-
-export interface ExtensionGlobalConfiguration {
-	openCreatedFile: boolean;
 }
 
 export interface ExtensionDefaultOptionConfiguration {

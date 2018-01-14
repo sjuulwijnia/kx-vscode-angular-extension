@@ -8,9 +8,6 @@ import {
 	AngularCliDefaultsItemConfiguration
 } from '../config-watchers';
 
-import {
-	AngularCreatorSettingsAngularModuleType
-} from './angular-creator-models';
 import { AngularSelector } from './angular-selector';
 import * as fileUtil from '../file-util';
 import { ScriptTarget } from 'typescript';
@@ -256,3 +253,5 @@ class AngularCreatorModuleFinder {
 		return (ts.isIdentifier(node) && node.originalKeywordKind === ts.SyntaxKind.UndefinedKeyword && node.escapedText === 'undefined');
 	}
 }
+
+export type AngularCreatorSettingsAngularModuleType = 'declarations' | 'imports' | 'providers';
