@@ -3,5 +3,5 @@ All notable changes to the "kx-vscode-angular-context-creator" extension will be
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## v0.1.0 (14-01-2018)
 - Initial release

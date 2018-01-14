@@ -1,7 +1,7 @@
 # Angular Context Creator
 ### kx-vscode-angular-context-creator
 
-A [Visual Studio Code](https://code.visualstudio.com) extension that adds several context-menu options in the sidebar when an [Angular CLI](https://github.com/angular/angular-cli) project is detected.
+A [Visual Studio Code](https://code.visualstudio.com) extension that adds several context-menu options in the explorer view when an [Angular CLI](https://github.com/angular/angular-cli) project is detected.
 
 ## Features
 
@@ -31,7 +31,8 @@ The extension has multiple ways to be configured:
 
 ## Known Issues
 
-Misses a bunch of **ng generate...** command options.
+* Sometimes fails to get the correct NgModule file.
+* Misses a bunch of **ng generate...** command options.
 
 ## Release Notes
 
@@ -42,3 +43,4 @@ Misses a bunch of **ng generate...** command options.
 * Add the missing **ng generate...** options.
 * Instead of blacklisting characters in the selector input, whitelist the characters that *are* allowed.
 * Add some unit tests to guarantee functionality won't break.
+* ...maybe a badge/icon?
