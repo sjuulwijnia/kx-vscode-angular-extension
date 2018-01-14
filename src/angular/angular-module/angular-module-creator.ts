@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import * as fileUtil from '../file-util';
+import * as fileUtil from '../../file-util';
 
 import { AngularComponentCreator, ComponentConfiguration } from '../angular-component';
 import { AngularCreatorInjects } from '../angular-creator-models';
@@ -16,7 +16,7 @@ import {
 
 	AngularCliModuleConfiguration,
 	ExtensionModuleConfiguration
-} from '../config-watchers';
+} from '../../config-watchers';
 
 import { createModuleTemplateCode } from './angular-module-template-code';
 

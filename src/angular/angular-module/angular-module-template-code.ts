@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliModuleConfiguration } from '../config-watchers';
 import { AngularSelector } from '../angular-selector';
+import { ModuleConfiguration } from './angular-module-configuration';
 
-export function createModuleTemplateCode(angularModuleConfiguration: AngularCliModuleConfiguration, angularSelector: AngularSelector) {
+export function createModuleTemplateCode(moduleConfiguration: ModuleConfiguration, angularSelector: AngularSelector) {
 	const moduleImports: string[] = [
 		'NgModule'
 	];

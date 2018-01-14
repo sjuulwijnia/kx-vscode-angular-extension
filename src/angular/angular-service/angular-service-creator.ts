@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import * as fileUtil from '../file-util';
+import * as fileUtil from '../../file-util';
 
 import { AngularCreatorInjects } from '../angular-creator-models';
 import { AngularCreator } from '../angular-creator';
@@ -12,7 +12,7 @@ import { AngularSelector } from '../angular-selector';
 import {
 	AngularCliConfiguration,
 	AngularCliDefaultsConfiguration
-} from '../config-watchers';
+} from '../../config-watchers';
 
 import { ServiceConfiguration } from './angular-service-configuration';
 

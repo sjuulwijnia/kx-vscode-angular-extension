@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliDirectiveConfiguration } from '../config-watchers';
+import { DirectiveConfiguration } from './angular-directive-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createDirectiveTemplateCode(angularDirectiveConfiguration: AngularCliDirectiveConfiguration, angularSelector: AngularSelector) {
+export function createDirectiveTemplateCode(directiveConfiguration: DirectiveConfiguration, angularSelector: AngularSelector) {
 	const directiveImports: string[] = [
 		'Directive'
 	];

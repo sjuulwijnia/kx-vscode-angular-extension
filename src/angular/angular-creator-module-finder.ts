@@ -6,13 +6,13 @@ import * as vscode from 'vscode';
 
 import {
 	AngularCliDefaultsItemConfiguration
-} from './config-watchers';
+} from '../config-watchers';
 
 import {
 	AngularCreatorSettingsAngularModuleType
 } from './angular-creator-models';
 import { AngularSelector } from './angular-selector';
-import * as fileUtil from './file-util';
+import * as fileUtil from '../file-util';
 import { ScriptTarget } from 'typescript';
 
 // TODO: move to angular-creator?

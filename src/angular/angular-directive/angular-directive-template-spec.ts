@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliDirectiveConfiguration } from '../config-watchers';
+import { DirectiveConfiguration } from './angular-directive-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createDirectiveTemplateSpec(angularPipeConfiguration: AngularCliDirectiveConfiguration, angularSelector: AngularSelector) {
+export function createDirectiveTemplateSpec(directiveConfiguration: DirectiveConfiguration, angularSelector: AngularSelector) {
 	return directiveTemplateSpec
 		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
 		.replace(new RegExp(FILE_REPLACE, 'gm'), angularSelector.filename);

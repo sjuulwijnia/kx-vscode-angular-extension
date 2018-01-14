@@ -2,12 +2,15 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 
-import { AngularCreatorInjects } from './angular-creator-models';
-import { AngularComponentCreator } from './angular-component';
-import { AngularDirectiveCreator } from './angular-directive';
-import { AngularModuleCreator } from './angular-module';
-import { AngularPipeCreator } from './angular-pipe';
-import { AngularServiceCreator } from './angular-service';
+import {
+	AngularComponentCreator,
+	AngularDirectiveCreator,
+	AngularModuleCreator,
+	AngularPipeCreator,
+	AngularServiceCreator,
+
+	AngularCreatorInjects
+} from './angular';
 
 import {
 	AngularConfigurationWatcher,
@@ -30,6 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
 	const angularServiceCreator = new AngularServiceCreator(injects);
 }
 
-export function deactivate() {
-
+export function deactivate(a) {
+	console.log('deactivate!', a);
 }

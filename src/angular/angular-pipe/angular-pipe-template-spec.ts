@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliPipeConfiguration } from '../config-watchers';
+import { PipeConfiguration } from './angular-pipe-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createPipeTemplateSpec(angularPipeConfiguration: AngularCliPipeConfiguration, angularSelector: AngularSelector) {
+export function createPipeTemplateSpec(angularPipeConfiguration: PipeConfiguration, angularSelector: AngularSelector) {
 	return pipeTemplateSpec
 		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
 		.replace(new RegExp(FILE_REPLACE, 'gm'), angularSelector.filename);

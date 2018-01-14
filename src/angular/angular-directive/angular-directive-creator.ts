@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import * as fileUtil from '../file-util';
+import * as fileUtil from '../../file-util';
 
 import { AngularCreatorInjects } from '../angular-creator-models';
 import { AngularCreator } from '../angular-creator';
@@ -12,26 +12,26 @@ import { AngularSelector } from '../angular-selector';
 import {
 	AngularCliConfiguration,
 	AngularCliDefaultsConfiguration,
-	AngularCliPipeConfiguration,
+	AngularCliDirectiveConfiguration,
 
-	ExtensionPipeConfiguration
-} from '../config-watchers';
+	ExtensionDirectiveConfiguration
+} from '../../config-watchers';
 
-import { createPipeTemplateCode } from './angular-pipe-template-code';
-import { createPipeTemplateSpec } from './angular-pipe-template-spec';
+import { createDirectiveTemplateCode } from './angular-directive-template-code';
+import { createDirectiveTemplateSpec } from './angular-directive-template-spec';
 
-export interface PipeConfiguration extends AngularCliPipeConfiguration, ExtensionPipeConfiguration { }
+export interface DirectiveConfiguration extends AngularCliDirectiveConfiguration, ExtensionDirectiveConfiguration { }
 
-export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
+export class AngularDirectiveCreator extends AngularCreator<DirectiveConfiguration> {
 	constructor(angularCreatorInjects: AngularCreatorInjects) {
 		super(angularCreatorInjects, {
-			angularType: 'pipe',
+			angularType: 'directive',
 			angularModuleType: 'declarations',
 
-			command: 'createAngularPipe',
+			command: 'createAngularDirective',
 
-			selectorPrompt: 'Enter pipe name...',
-			selectorPromptAppendPrefix: false
+			selectorPrompt: 'Enter directive selector...',
+			selectorPromptAppendPrefix: 'short'
 		});
 	}
 
@@ -44,13 +44,13 @@ export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
 			containerBarrelFile: false,
 			containerSuffix: false,
 
-			...this.angularConfiguration.defaults.pipe,
-			...this.extensionConfiguration.pipe
+			...this.angularConfiguration.defaults.directive,
+			...this.extensionConfiguration.directive
 		};
 	}
 
 	protected async createConfigurationManually() {
-		return new Promise<PipeConfiguration>(async resolve => {
+		return new Promise<DirectiveConfiguration>(async resolve => {
 			const flat = await this.promptList({
 				defaultValue: this.configuration.flat,
 				items: [
@@ -92,18 +92,18 @@ export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
 		});
 	}
 
-	public createFiles(configuration: PipeConfiguration, directory: string, selector: AngularSelector): Promise<string> {
+	public createFiles(configuration: DirectiveConfiguration, directory: string, selector: AngularSelector): Promise<string> {
 		return new Promise<string>(async resolve => {
 			const editorConfiguration = this.angularCreatorInjects.editorConfigurationWatcher;
 			const filename = `${directory}${path.sep}${selector.filename}`;
 
 			// create typescript file
-			const typescript = editorConfiguration.makeCompliant(createPipeTemplateCode(configuration, selector));
+			const typescript = editorConfiguration.makeCompliant(createDirectiveTemplateCode(configuration, selector));
 			await fileUtil.createFile(`${filename}.ts`, typescript);
 
 			// create spec file if configured
 			if (configuration.spec) {
-				const spec = editorConfiguration.makeCompliant(createPipeTemplateSpec(configuration, selector));
+				const spec = editorConfiguration.makeCompliant(createDirectiveTemplateSpec(configuration, selector));
 				await fileUtil.createFile(`${filename}.spec.ts`, spec);
 			}
 

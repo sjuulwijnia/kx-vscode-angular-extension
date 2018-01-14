@@ -4,7 +4,7 @@ import {
 	AngularConfigurationWatcher,
 	EditorConfigurationWatcher,
 	VisualStudioCodeConfigurationWatcher
-} from './config-watchers';
+} from '../config-watchers';
 
 export interface AngularCreatorSettings {
 	angularType: string;

@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliPipeConfiguration } from '../config-watchers';
+import { PipeConfiguration } from './angular-pipe-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createPipeTemplateCode(angularPipeConfiguration: AngularCliPipeConfiguration, angularSelector: AngularSelector) {
+export function createPipeTemplateCode(pipeConfiguration: PipeConfiguration, angularSelector: AngularSelector) {
 	const pipeImports: string[] = [
 		'Pipe',
 		'PipeTransform'

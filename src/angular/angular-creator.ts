@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+import { Creator } from '../creator';
+
 import {
 	AngularConfigurationWatcher,
 	EditorConfigurationWatcher,
@@ -13,13 +15,13 @@ import {
 	AngularCliDefaultsItemConfiguration,
 	ExtensionConfiguration,
 	ExtensionDefaultOptionConfiguration
-} from './config-watchers';
+} from '../config-watchers';
 
 import {
 	AngularSelector,
 	AngularSelectorInvalidEnum
 } from './angular-selector';
-import * as fileUtil from './file-util';
+import * as fileUtil from '../file-util';
 
 import {
 	AngularCreatorInjects,
@@ -29,7 +31,7 @@ import {
 } from './angular-creator-models';
 import { addToNearestNgModule } from './angular-creator-module-finder';
 
-export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsItemConfiguration & ExtensionDefaultOptionConfiguration> {
+export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsItemConfiguration & ExtensionDefaultOptionConfiguration> extends Creator {
 	protected configuration: CONFIGURATION = null;
 
 	protected get angularConfiguration(): AngularCliConfiguration {
@@ -66,10 +68,7 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 		protected readonly angularCreatorInjects: AngularCreatorInjects,
 		private readonly angularCreatorSettings: AngularCreatorSettings
 	) {
-		const commandWatcher = vscode.commands
-			.registerCommand(`kx-vscode-angular-extension.${angularCreatorSettings.command}`, uri => {
-				this.create(uri);
-			});
+		super(angularCreatorSettings.command, angularCreatorInjects.context);
 
 		angularCreatorInjects.angularConfigurationWatcher.subscribe(() => {
 			if (!!this.angularConfiguration) {
@@ -82,8 +81,6 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 				this.onConfigurationUpdated();
 			}
 		});
-
-		angularCreatorInjects.context.subscriptions.push(commandWatcher);
 	}
 
 	/**
@@ -115,58 +112,6 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 			.then(document => {
 				vscode.window.showTextDocument(document);
 			});
-	}
-
-	/**
-	 * Prompts for a single string value.
-	 * @param prompt Prompt containing the question which should lead to a string.
-	 * @param prefix Prefix for the given answer. Optional.
-	 */
-	protected prompt(prompt: string, prefix = ''): Promise<string> {
-		const value = (!!prefix) ? prefix : '';
-		const valueSelection: [number, number] = [value.length, value.length];
-
-		return new Promise(resolve => {
-			vscode.window.showInputBox({
-				value,
-				valueSelection,
-				prompt
-			}).then(result => {
-				resolve(result);
-			});
-		});
-	}
-
-	protected promptList<T>(request: PromptListRequest<T>): Promise<T> {
-		const index = request.items.findIndex(pli => pli.value === request.defaultValue);
-		if (index !== -1) {
-			const defaultItem = request.items.splice(index, 1)[0];
-			defaultItem.description = '(default)';
-
-			request.items = [
-				defaultItem,
-				...request.items
-			];
-		}
-
-		request.items.forEach(item => {
-			if (item.value === request.defaultValue) {
-				item.description = '(default)';
-			}
-		})
-
-		return new Promise(resolve => {
-			vscode.window.showQuickPick(request.items, {
-				placeHolder: request.placeholder
-			}).then(result => {
-				if (!!result) {
-					resolve(result.value);
-					return;
-				}
-
-				resolve(request.defaultValue);
-			});
-		});
 	}
 
 	public async create(uri: vscode.Uri, selectorFromOutside?: string) {
@@ -289,14 +234,4 @@ export abstract class AngularCreator<CONFIGURATION extends AngularCliDefaultsIte
 export interface ExtensionConfiguration {
 	containerBarrelFile: boolean;
 	openCreatedFile: boolean;
-}
-
-export interface PromptListRequest<T> {
-	defaultValue: T;
-	items: PromptListItem<T>[];
-	placeholder: string;
-}
-
-export interface PromptListItem<T> extends vscode.QuickPickItem {
-	value: T;
 }

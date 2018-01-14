@@ -1,6 +1,6 @@
 import {
 	AngularCliDirectiveConfiguration,
 	ExtensionDirectiveConfiguration
-} from '../config-watchers';
+} from '../../config-watchers';
 
 export interface DirectiveConfiguration extends AngularCliDirectiveConfiguration, ExtensionDirectiveConfiguration { }

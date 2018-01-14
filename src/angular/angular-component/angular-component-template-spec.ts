@@ -1,7 +1,8 @@
 'use strict';
+import { ComponentConfiguration } from './angular-component-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createComponentTemplateSpec(angularSelector: AngularSelector) {
+export function createComponentTemplateSpec(componentConfiguration: ComponentConfiguration, angularSelector: AngularSelector) {
 	return componentTemplateSpec
 		.replace(new RegExp(CLASS_REPLACE, 'gm'), angularSelector.clazz)
 		.replace(new RegExp(FILE_REPLACE, 'gm'), angularSelector.filename);

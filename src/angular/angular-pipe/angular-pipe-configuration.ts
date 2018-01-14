@@ -1,6 +1,6 @@
 import {
 	AngularCliPipeConfiguration,
 	ExtensionPipeConfiguration
-} from '../config-watchers';
+} from '../../config-watchers';
 
 export interface PipeConfiguration extends AngularCliPipeConfiguration, ExtensionPipeConfiguration { }

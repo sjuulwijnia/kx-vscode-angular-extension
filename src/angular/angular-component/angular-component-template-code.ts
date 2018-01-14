@@ -1,8 +1,8 @@
 'use strict';
-import { AngularCliComponentConfiguration } from '../config-watchers';
+import { ComponentConfiguration } from './angular-component-configuration';
 import { AngularSelector } from '../angular-selector';
 
-export function createComponentTemplateCode(angularComponentConfiguration: AngularCliComponentConfiguration, angularSelector: AngularSelector, styleExtension: string = 'css') {
+export function createComponentTemplateCode(componentConfiguration: ComponentConfiguration, angularSelector: AngularSelector, styleExtension: string = 'css') {
 	const componentOptions: string[] = [
 		`selector: '${angularSelector.component}'`
 	];
@@ -10,31 +10,31 @@ export function createComponentTemplateCode(angularComponentConfiguration: Angul
 		'Component'
 	];
 
-	if (angularComponentConfiguration.inlineTemplate) {
+	if (componentConfiguration.inlineTemplate) {
 		componentOptions.push(`template: \`<div>${angularSelector.component} works!</div>\``);
 	} else {
 		componentOptions.push(`templateUrl: './${angularSelector.filename}.html'`)
 	}
 
-	if (angularComponentConfiguration.inlineStyle) {
+	if (componentConfiguration.inlineStyle) {
 		componentOptions.push(`styles: [ ':host { }' ]`);
 	} else {
 		componentOptions.push(`styleUrls: [ './${angularSelector.filename}.${styleExtension}' ]`)
 	}
 
-	switch (angularComponentConfiguration.changeDetection) {
+	switch (componentConfiguration.changeDetection) {
 		case 'OnPush':
-			componentOptions.push(`changeDetection: ChangeDetectionStrategy.${angularComponentConfiguration.changeDetection}`);
+			componentOptions.push(`changeDetection: ChangeDetectionStrategy.${componentConfiguration.changeDetection}`);
 			componentImports.push('ChangeDetectionStrategy');
 			break;
 
 		default: break;
 	}
 
-	switch (angularComponentConfiguration.viewEncapsulation) {
+	switch (componentConfiguration.viewEncapsulation) {
 		case 'Native':
 		case 'None':
-			componentOptions.push(`encapsulation: ViewEncapsulation.${angularComponentConfiguration.viewEncapsulation}`);
+			componentOptions.push(`encapsulation: ViewEncapsulation.${componentConfiguration.viewEncapsulation}`);
 			componentImports.push('ViewEncapsulation');
 			break;
 

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-import * as fileUtil from '../file-util';
+import * as fileUtil from '../../file-util';
 
 import { AngularCreatorInjects } from '../angular-creator-models';
 import { AngularCreator } from '../angular-creator';
@@ -19,7 +19,7 @@ import {
 	AngularCliComponentConfigurationViewEncapsulation,
 
 	ExtensionComponentConfiguration
-} from '../config-watchers';
+} from '../../config-watchers';
 
 import { createComponentTemplateCode } from './angular-component-template-code';
 import { createComponentTemplateSpec } from './angular-component-template-spec';
@@ -221,7 +221,7 @@ export class AngularComponentCreator extends AngularCreator<ComponentConfigurati
 
 			// create spec file if configured
 			if (configuration.spec) {
-				const spec = editorConfiguration.makeCompliant(createComponentTemplateSpec(selector));
+				const spec = editorConfiguration.makeCompliant(createComponentTemplateSpec(configuration, selector));
 				await fileUtil.createFile(`${filename}.spec.ts`, spec);
 			}
 
