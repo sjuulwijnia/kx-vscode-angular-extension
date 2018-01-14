@@ -15,7 +15,7 @@ export class AngularConfigurationWatcher extends BaseConfigWatcher<AngularCliCon
 	}
 
 	protected triggerConfigurationUpdate(angularConfigurationJson: string) {
-		this.setCurrentConfiguration(JSON.parse(angularConfigurationJson) as AngularCliConfiguration);
+		this.setCurrentConfiguration(JSON.parse(this.sanitizeJson(angularConfigurationJson)) as AngularCliConfiguration);
 
 		this.triggerCallbacks();
 	}

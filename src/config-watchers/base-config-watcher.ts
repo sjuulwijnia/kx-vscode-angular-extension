@@ -51,6 +51,13 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 		this._currentConfiguration = configuration;
 	}
 
+	protected sanitizeJson(json: string) {
+		return json
+			.split('\n')
+			.filter(s => !s.startsWith('//'))
+			.join('\n');
+	}
+
 	protected triggerCallbacks() {
 		this.callbacks.forEach((callback, i) => {
 			callback(this._currentConfiguration);
@@ -61,7 +68,9 @@ export abstract class BaseConfigWatcher<CONFIGURATION> {
 		fs.readFile(`${vscode.workspace.workspaceFolders[0].uri.fsPath}/${this.filename}`, 'utf-8', (error: any, data: Buffer) => {
 			try {
 				this.triggerConfigurationUpdate(data.toString());
-			} catch (error) { }
+			} catch (error) {
+				console.error('error!', error);
+			}
 		});
 	}
 }

@@ -37,6 +37,10 @@ export class AngularComponentCreator extends AngularCreator<ComponentConfigurati
 	}
 
 	protected onConfigurationUpdated() {
+		if (!this.angularConfiguration || !this.vscodeExtensionConfiguration) {
+			return;
+		}
+
 		this.configuration = {
 			changeDetection: 'Default',
 			flat: false,

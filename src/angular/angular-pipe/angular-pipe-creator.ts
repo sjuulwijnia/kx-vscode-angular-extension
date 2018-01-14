@@ -33,6 +33,10 @@ export class AngularPipeCreator extends AngularCreator<PipeConfiguration> {
 	}
 
 	protected onConfigurationUpdated() {
+		if (!this.angularConfiguration || !this.vscodeExtensionConfiguration) {
+			return;
+		}
+
 		this.configuration = {
 			flat: false,
 			spec: true,

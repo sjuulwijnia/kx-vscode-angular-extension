@@ -36,6 +36,10 @@ export class AngularModuleCreator extends AngularCreator<ModuleConfiguration> {
 	}
 
 	protected onConfigurationUpdated() {
+		if (!this.angularConfiguration || !this.vscodeExtensionConfiguration) {
+			return;
+		}
+
 		this.configuration = {
 			flat: false,
 			spec: false,

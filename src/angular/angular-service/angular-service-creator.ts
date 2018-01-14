@@ -30,6 +30,10 @@ export class AngularServiceCreator extends AngularCreator<ServiceConfiguration> 
 	}
 
 	protected onConfigurationUpdated() {
+		if (!this.angularConfiguration || !this.vscodeExtensionConfiguration) {
+			return;
+		}
+
 		this.configuration = {
 			flat: false,
 			spec: true,

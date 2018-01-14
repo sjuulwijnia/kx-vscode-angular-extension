@@ -2,7 +2,7 @@
     "name": "kx-vscode-angular-context-creator",
     "displayName": "Angular Context Creator",
     "description": "Adds Angular related context menu options to Visual Studio Code's explorer view when an Angular CLI project is detected.",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "publisher": "sjuulwijnia",
     "preview": true,
     "galleryBanner": {

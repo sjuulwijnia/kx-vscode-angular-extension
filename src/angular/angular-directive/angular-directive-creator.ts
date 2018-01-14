@@ -33,6 +33,10 @@ export class AngularDirectiveCreator extends AngularCreator<DirectiveConfigurati
 	}
 
 	protected onConfigurationUpdated() {
+		if (!this.angularConfiguration || !this.vscodeExtensionConfiguration) {
+			return;
+		}
+
 		this.configuration = {
 			flat: false,
 			spec: true,
